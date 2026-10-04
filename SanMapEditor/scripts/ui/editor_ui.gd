@@ -82,8 +82,9 @@ func _ready() -> void:
 	%BtnApplySize.pressed.connect(_on_apply_size)
 	%PlayableXSpin.value_changed.connect(_on_playable_changed)
 	%PlayableYSpin.value_changed.connect(_on_playable_changed)
-	%PlayableWSpin.value_changed.connect(_on_playable_changed)
-	%PlayableHSpin.value_changed.connect(_on_playable_changed)
+	%PlayableWSpin.value_changed.connect(_on_playable_size_changed)
+	%PlayableHSpin.value_changed.connect(_on_playable_size_changed)
+	%BtnPlayableCenter.pressed.connect(func() -> void: EditorState.center_playable_area())
 	%BtnPlayableFull.pressed.connect(func() -> void: EditorState.reset_playable_to_full())
 	%FadeStartSpin.value_changed.connect(_on_fade_start_changed)
 	%FadeDistSpin.value_changed.connect(_on_fade_dist_changed)
@@ -926,6 +927,21 @@ func _on_playable_changed(_value: float = 0.0) -> void:
 		%PlayableHSpin.value
 	)
 	# Reflect clamped values after EditorState applies bounds.
+	_syncing = true
+	_sync_playable_spins()
+	_syncing = false
+
+
+func _on_playable_size_changed(_value: float = 0.0) -> void:
+	## Width/Length changes keep the playable rect centered on the map.
+	if _syncing:
+		return
+	var m := EditorState.map
+	var w: float = %PlayableWSpin.value
+	var h: float = %PlayableHSpin.value
+	var x := (float(m.width) - w) * 0.5
+	var y := (float(m.length) - h) * 0.5
+	EditorState.set_playable_area(x, y, w, h)
 	_syncing = true
 	_sync_playable_spins()
 	_syncing = false

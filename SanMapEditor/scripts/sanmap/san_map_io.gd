@@ -141,7 +141,10 @@ static func load_sanmap(path: String) -> SanMapData:
 
 static func save_sanmap(path: String, map: SanMapData) -> Error:
 	map.sync_armies_with_spawns()
+	# Editor keeps texture-space Z; .sanmap file stores Sanctuary world Z (MapUtils).
+	convert_map_horizontal_z(map, true)
 	var export_dict := map.to_export_dict()
+	convert_map_horizontal_z(map, false)
 	# Use ordered writer — JSON.stringify alphabetizes Dictionary keys.
 	var json := OrderedJson.stringify(export_dict, "  ")
 	# Official maps use Windows CRLF.
@@ -161,6 +164,203 @@ static func ensure_textures_dir(sanmap_path: String) -> Error:
 		return OK
 	var err := DirAccess.make_dir_recursive_absolute(dir_path)
 	return err
+
+
+## Sanctuary MapUtils.TextureToWorldOrigin:
+##   texture/raster + editor Z  →  world Z = length - z - 1
+## Heightmap/TGA stay top-left (no raster mirror). Only marker/prop/decal/playable Z
+## is converted on JSON IO — mirroring the heightmap caused left/right swap in-game.
+
+
+static func texture_to_world_z(z_texture: float, map_length: float) -> float:
+	return float(map_length) - z_texture - 1.0
+
+
+static func world_to_texture_z(z_world: float, map_length: float) -> float:
+	# Involution of texture_to_world_z for the MapUtils formula.
+	return float(map_length) - z_world - 1.0
+
+
+static func sample_heightmap_at_xz(
+	heights: PackedFloat32Array,
+	resolution: int,
+	map_width: float,
+	map_length: float,
+	map_height: float,
+	world_x: float,
+	z_along_rows: float
+) -> float:
+	var res := maxi(resolution, 2)
+	var u := world_x / maxf(map_width, 0.001)
+	var v := z_along_rows / maxf(map_length, 0.001)
+	var fx := clampf(u, 0.0, 1.0) * float(res - 1)
+	var fy := clampf(v, 0.0, 1.0) * float(res - 1)
+	var x0 := clampi(int(floor(fx)), 0, res - 1)
+	var y0 := clampi(int(floor(fy)), 0, res - 1)
+	var x1 := mini(x0 + 1, res - 1)
+	var y1 := mini(y0 + 1, res - 1)
+	var tx := fx - float(x0)
+	var ty := fy - float(y0)
+	var i00 := y0 * res + x0
+	var i10 := y0 * res + x1
+	var i01 := y1 * res + x0
+	var i11 := y1 * res + x1
+	var h00 := heights[i00] if i00 < heights.size() else 0.0
+	var h10 := heights[i10] if i10 < heights.size() else 0.0
+	var h01 := heights[i01] if i01 < heights.size() else 0.0
+	var h11 := heights[i11] if i11 < heights.size() else 0.0
+	var h0 := lerpf(h00, h10, tx)
+	var h1 := lerpf(h01, h11, tx)
+	return lerpf(h0, h1, ty) * map_height
+
+
+static func _collect_marker_transforms(map: SanMapData) -> Array[Dictionary]:
+	var samples: Array[Dictionary] = []
+	var spawn: Dictionary = map.markers.get(SanMapData.MARKER_SPAWN, {})
+	var spawn_tf: Dictionary = spawn.get("transforms", {})
+	for id in spawn_tf.keys():
+		if typeof(spawn_tf[id]) == TYPE_DICTIONARY:
+			samples.append(spawn_tf[id])
+	if samples.is_empty():
+		var alloys: Dictionary = map.markers.get(SanMapData.MARKER_ALLOYS, {})
+		var alloy_tf: Dictionary = alloys.get("transforms", {})
+		for id in alloy_tf.keys():
+			if typeof(alloy_tf[id]) == TYPE_DICTIONARY:
+				samples.append(alloy_tf[id])
+	return samples
+
+
+## Mean |marker.y - heightmap| treating marker.z as texture-row Z. INF if none.
+static func marker_height_fit_as_texture(heights: PackedFloat32Array, map: SanMapData) -> float:
+	var samples := _collect_marker_transforms(map)
+	if samples.is_empty():
+		return INF
+	var acc := 0.0
+	var n := 0
+	for t in samples:
+		var pos: Dictionary = t.get("position", {})
+		var expected := float(pos.get("y", 0.0))
+		var got := sample_heightmap_at_xz(
+			heights,
+			map.heightmap_resolution,
+			float(map.width),
+			float(map.length),
+			float(map.height),
+			float(pos.get("x", 0.0)),
+			float(pos.get("z", 0.0))
+		)
+		acc += absf(got - expected)
+		n += 1
+	return acc / float(maxi(n, 1))
+
+
+## Mean |marker.y - heightmap| after MapUtils world→texture on marker.z.
+static func marker_height_fit_as_world(heights: PackedFloat32Array, map: SanMapData) -> float:
+	var samples := _collect_marker_transforms(map)
+	if samples.is_empty():
+		return INF
+	var map_l := float(map.length)
+	var acc := 0.0
+	var n := 0
+	for t in samples:
+		var pos: Dictionary = t.get("position", {})
+		var expected := float(pos.get("y", 0.0))
+		var z_tex := world_to_texture_z(float(pos.get("z", 0.0)), map_l)
+		var got := sample_heightmap_at_xz(
+			heights,
+			map.heightmap_resolution,
+			float(map.width),
+			float(map.length),
+			float(map.height),
+			float(pos.get("x", 0.0)),
+			z_tex
+		)
+		acc += absf(got - expected)
+		n += 1
+	return acc / float(maxi(n, 1))
+
+
+static func _convert_transform_z(t: Dictionary, map_length: float, to_world: bool) -> void:
+	var pos: Dictionary = t.get("position", {})
+	var z := float(pos.get("z", 0.0))
+	pos["z"] = texture_to_world_z(z, map_length) if to_world else world_to_texture_z(z, map_length)
+	t["position"] = pos
+
+
+static func convert_map_horizontal_z(map: SanMapData, to_world: bool) -> void:
+	## Convert marker/prop/decal/playable Z between editor(texture) and Sanctuary(world).
+	var map_l := float(map.length)
+	for marker_type in map.markers.keys():
+		var bucket: Dictionary = map.markers[marker_type]
+		if typeof(bucket) != TYPE_DICTIONARY:
+			continue
+		var transforms: Dictionary = bucket.get("transforms", {})
+		for id in transforms.keys():
+			if typeof(transforms[id]) != TYPE_DICTIONARY:
+				continue
+			var t: Dictionary = transforms[id]
+			_convert_transform_z(t, map_l, to_world)
+			transforms[id] = t
+		bucket["transforms"] = transforms
+		map.markers[marker_type] = bucket
+
+	var area: Dictionary = map.areas.get(SanMapData.AREA_PLAYABLE, {})
+	if not area.is_empty():
+		var y0 := float(area.get("y", 0.0))
+		var h := float(area.get("height", map_l))
+		if to_world:
+			# texture [y0, y0+h] → world (same MapUtils axis flip)
+			var y1_tex := y0 + h
+			var y0_world := texture_to_world_z(y1_tex, map_l)
+			area["y"] = y0_world
+			area["height"] = h
+		else:
+			var y1_world := y0 + h
+			var y0_tex := world_to_texture_z(y1_world, map_l)
+			area["y"] = y0_tex
+			area["height"] = h
+		map.areas[SanMapData.AREA_PLAYABLE] = area
+		map.clamp_playable_area()
+
+	for i in map.props.size():
+		if typeof(map.props[i]) != TYPE_DICTIONARY:
+			continue
+		var group: Dictionary = map.props[i]
+		var transforms: Array = group.get("transforms", [])
+		for j in transforms.size():
+			if typeof(transforms[j]) != TYPE_DICTIONARY:
+				continue
+			var t: Dictionary = transforms[j]
+			_convert_transform_z(t, map_l, to_world)
+			transforms[j] = t
+		group["transforms"] = transforms
+		map.props[i] = group
+
+	for i in map.decals.size():
+		if typeof(map.decals[i]) != TYPE_DICTIONARY:
+			continue
+		var group: Dictionary = map.decals[i]
+		var transforms: Array = group.get("transforms", [])
+		for j in transforms.size():
+			if typeof(transforms[j]) != TYPE_DICTIONARY:
+				continue
+			var t: Dictionary = transforms[j]
+			_convert_transform_z(t, map_l, to_world)
+			transforms[j] = t
+		group["transforms"] = transforms
+		map.decals[i] = group
+
+
+## After loading heightmap bytes: if .sanmap positions are Sanctuary-world, convert to editor/texture Z.
+static func apply_coordinate_space_for_editor(heights: PackedFloat32Array, map: SanMapData) -> void:
+	var err_tex := marker_height_fit_as_texture(heights, map)
+	var err_world := marker_height_fit_as_world(heights, map)
+	if err_world == INF and err_tex == INF:
+		return
+	# Official / correctly exported packs store world Z (MapUtils).
+	if err_world + 0.5 < err_tex:
+		convert_map_horizontal_z(map, false)
+		print("SanMapIO: converted Sanctuary world Z → editor texture Z (MapUtils).")
 
 
 static func load_heightmap_raw(path: String, resolution: int) -> PackedFloat32Array:

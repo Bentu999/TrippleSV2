@@ -104,12 +104,7 @@ var wind_direction: float = 160.0
 func _init() -> void:
 	_init_default_strata()
 	_ensure_core_markers()
-	areas[AREA_PLAYABLE] = {
-		"x": 0.0,
-		"y": 0.0,
-		"width": float(width),
-		"height": float(length),
-	}
+	reset_playable_to_centered()
 
 
 func _init_default_strata() -> void:
@@ -232,9 +227,36 @@ func resize(new_width: int, new_length: int, new_height: int, new_resolution: in
 	height = maxi(new_height, 16)
 	heightmap_resolution = maxi(new_resolution, 17)
 	if fill_playable:
-		reset_playable_to_full()
+		# New maps: centered half-size playable (matches The Forge defaults).
+		reset_playable_to_centered()
 	else:
 		clamp_playable_area()
+
+
+## Default playable: half map size, centered (e.g. 2048 → 1024² at 512,512).
+func reset_playable_to_centered() -> void:
+	var w := maxf(float(width) * 0.5, 1.0)
+	var h := maxf(float(length) * 0.5, 1.0)
+	areas[AREA_PLAYABLE] = {
+		"x": (float(width) - w) * 0.5,
+		"y": (float(length) - h) * 0.5,
+		"width": w,
+		"height": h,
+	}
+
+
+## Keep current playable size, move origin so the rect sits on map center.
+func center_playable_area() -> void:
+	var area := get_playable_area()
+	var w: float = area["width"]
+	var h: float = area["height"]
+	areas[AREA_PLAYABLE] = {
+		"x": (float(width) - w) * 0.5,
+		"y": (float(length) - h) * 0.5,
+		"width": w,
+		"height": h,
+	}
+	clamp_playable_area()
 
 
 func reset_playable_to_full() -> void:
@@ -283,27 +305,41 @@ func clamp_playable_area() -> void:
 	}
 
 
+## The Forge uses odd Army_N → faction 1, even → 2.
+## MapUtils.cs defaults new armies to faction 0 / alloys 500 / energy 500; shipped
+## multiplayer maps (Forge) use 1/2 so each side gets its own spawn.
+static func faction_for_army_id(army_id: String) -> int:
+	if army_id.begins_with("Army_"):
+		var n := int(army_id.substr(5))
+		if n > 0:
+			return 1 if (n % 2) == 1 else 2
+	return 1
+
+
+static func _army_sort_key(army_id: String) -> int:
+	if army_id.begins_with("Army_"):
+		return int(army_id.substr(5))
+	return 9999
+
+
 func sync_armies_with_spawns() -> void:
 	_ensure_core_markers()
 	var spawn_bucket: Dictionary = markers.get(MARKER_SPAWN, {})
 	var transforms: Dictionary = spawn_bucket.get("transforms", {})
-	for spawn_id in transforms.keys():
-		if not armies.has(spawn_id):
-			armies[spawn_id] = {
-				"faction": 0,
-				"alloys": 500.0,
-				"energy": 500.0,
-				"groups": {},
-			}
-	# Reorder army fields to official order.
+	var ids: Array = transforms.keys()
+	ids.sort_custom(func(a, b): return _army_sort_key(str(a)) < _army_sort_key(str(b)))
+
+	# Rebuild armies from spawn markers only (drop orphans).
 	var ordered_armies := {}
-	for army_id in armies.keys():
-		var a: Dictionary = armies[army_id]
-		ordered_armies[army_id] = {
-			"faction": int(a.get("faction", 0)),
-			"alloys": float(a.get("alloys", 500.0)),
-			"energy": float(a.get("energy", 500.0)),
-			"groups": a.get("groups", {}),
+	for spawn_id in ids:
+		var id := str(spawn_id)
+		var prev: Dictionary = armies.get(id, {})
+		ordered_armies[id] = {
+			"faction": faction_for_army_id(id),
+			# Resource defaults match MapUtils.cs; faction pattern matches The Forge.
+			"alloys": float(prev.get("alloys", 500.0)),
+			"energy": float(prev.get("energy", 500.0)),
+			"groups": prev.get("groups", {}),
 		}
 	armies = ordered_armies
 
@@ -580,8 +616,9 @@ static func from_dict(data: Dictionary) -> SanMapData:
 	map.wind_direction = float(data.get("windDirection", 160.0))
 
 	map._ensure_core_markers()
+	map.sync_armies_with_spawns()
 	if not map.areas.has(AREA_PLAYABLE):
-		map.reset_playable_to_full()
+		map.reset_playable_to_centered()
 	else:
 		map.clamp_playable_area()
 	if map.stratum_layers.is_empty():

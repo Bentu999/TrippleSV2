@@ -314,6 +314,45 @@ func reset_playable_to_full() -> void:
 		end_stroke()
 
 
+func reset_playable_to_centered() -> void:
+	var before := map.get_playable_area()
+	var w := maxf(float(map.width) * 0.5, 1.0)
+	var h := maxf(float(map.length) * 0.5, 1.0)
+	var x := (float(map.width) - w) * 0.5
+	var y := (float(map.length) - h) * 0.5
+	if (
+		is_equal_approx(before["x"], x)
+		and is_equal_approx(before["y"], y)
+		and is_equal_approx(before["width"], w)
+		and is_equal_approx(before["height"], h)
+	):
+		return
+	var owned := begin_stroke("Playable area centered")
+	map.reset_playable_to_centered()
+	_stroke_touched_meta = true
+	mark_dirty()
+	map_changed.emit()
+	if owned:
+		end_stroke()
+
+
+func center_playable_area() -> void:
+	var before := map.get_playable_area()
+	var w: float = before["width"]
+	var h: float = before["height"]
+	var x := (float(map.width) - w) * 0.5
+	var y := (float(map.length) - h) * 0.5
+	if is_equal_approx(before["x"], x) and is_equal_approx(before["y"], y):
+		return
+	var owned := begin_stroke("Center playable area")
+	map.center_playable_area()
+	_stroke_touched_meta = true
+	mark_dirty()
+	map_changed.emit()
+	if owned:
+		end_stroke()
+
+
 func set_fade_distance(value: float) -> void:
 	var clamped := maxf(value, 0.0)
 	if is_equal_approx(map.fade_distance, clamped):
@@ -1235,6 +1274,8 @@ func load_from_path(path: String) -> Error:
 	var hm_path := SanMapIO.find_heightmap_path(path)
 	if hm_path != "":
 		heights = SanMapIO.load_heightmap_raw(hm_path, map.heightmap_resolution)
+		# MapUtils: heightmap stays texture-space; convert world marker Z → editor Z if needed.
+		SanMapIO.apply_coordinate_space_for_editor(heights, map)
 	else:
 		_alloc_flat_heights(0.0)
 		push_warning("No Textures/heightmap.raw found; using flat terrain.")

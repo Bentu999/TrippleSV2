@@ -587,7 +587,7 @@ size_flags_horizontal = 3
 min_value = 0.0
 max_value = 2048.0
 step = 1.0
-value = 0.0
+value = 64.0
 
 [node name="PlayableYLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
 layout_mode = 2
@@ -600,7 +600,7 @@ layout_mode = 2
 min_value = 0.0
 max_value = 2048.0
 step = 1.0
-value = 0.0
+value = 64.0
 
 [node name="PlayableWLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
 layout_mode = 2
@@ -613,7 +613,7 @@ layout_mode = 2
 min_value = 1.0
 max_value = 2048.0
 step = 1.0
-value = 256.0
+value = 128.0
 
 [node name="PlayableHLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
 layout_mode = 2
@@ -626,19 +626,30 @@ layout_mode = 2
 min_value = 1.0
 max_value = 2048.0
 step = 1.0
-value = 256.0
+value = 128.0
 
-[node name="BtnPlayableFull" type="Button" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
+[node name="PlayableButtons" type="HBoxContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnPlayableCenter" type="Button" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableButtons"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Auf volle Karte setzen"
+size_flags_horizontal = 3
+text = "Zentrieren"
+
+[node name="BtnPlayableFull" type="Button" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Volle Karte"
 
 [node name="PlayableHint" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.52, 1)
 theme_override_font_sizes/font_size = 11
 autowrap_mode = 3
-text = "Spielbarer Bereich innerhalb der Karte. Rand außerhalb wird im Spiel von Infinite Terrain fortgesetzt (nicht abschaltbar)."
+text = "Standard: halbe Kartengröße, zentriert (wie The Forge). Rand außerhalb wird im Spiel von Infinite Terrain fortgesetzt."
 
 [node name="FadeGrid" type="GridContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
 layout_mode = 2
