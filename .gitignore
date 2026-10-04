@@ -1,0 +1,15 @@
+# Godot
+SanMapEditor/.godot/
+
+# Local game texture dump / example map packages (too large for git)
+Enviroment/
+Environment/
+Beispielkarten/
+
+# Transient editor export tests
+SanMapEditor/Maps/_fix_export_fix/
+
+# Accidental web scaffold leftovers
+node_modules/
+dist/
+*.local

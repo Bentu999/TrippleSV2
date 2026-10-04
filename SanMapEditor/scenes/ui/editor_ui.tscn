@@ -1,0 +1,683 @@
+[gd_scene load_steps=9 format=3 uid="uid://sanmapeditorui01"]
+
+[ext_resource type="Script" path="res://scripts/ui/editor_ui.gd" id="1_ui"]
+[ext_resource type="Theme" path="res://resources/theme/editor_theme.tres" id="2_theme"]
+[ext_resource type="FontFile" path="res://resources/fonts/Syne.ttf" id="3_syne"]
+[ext_resource type="FontFile" path="res://resources/fonts/IBMPlexSans.ttf" id="4_plex"]
+[ext_resource type="Script" path="res://scripts/ui/map_flat_view.gd" id="5_flat"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.05, 0.065, 0.06, 0.96)
+border_width_bottom = 1
+border_color = Color(0.78, 0.58, 0.28, 0.28)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rail"]
+content_margin_left = 8.0
+content_margin_top = 12.0
+content_margin_right = 8.0
+content_margin_bottom = 12.0
+bg_color = Color(0.06, 0.078, 0.072, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.4, 0.32, 0.45)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 8
+shadow_offset = Vector2(0, 3)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status"]
+content_margin_left = 16.0
+content_margin_top = 7.0
+content_margin_right = 16.0
+content_margin_bottom = 7.0
+bg_color = Color(0.045, 0.058, 0.054, 0.95)
+border_width_top = 1
+border_color = Color(0.3, 0.34, 0.28, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+bg_color = Color(0.72, 0.42, 0.12, 0.95)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1_ui")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+
+[node name="MapFlatView" type="Control" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_flat")
+
+[node name="TopBar" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 58.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_top")
+
+[node name="TopRow" type="HBoxContainer" parent="Root/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BrandBlock" type="VBoxContainer" parent="Root/TopBar/TopRow"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="BrandLabel" type="Label" parent="Root/TopBar/TopRow/BrandBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.78, 0.42, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 22
+text = "SANMAP"
+
+[node name="BrandSub" type="Label" parent="Root/TopBar/TopRow/BrandBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.62, 0.56, 1)
+theme_override_fonts/font = ExtResource("4_plex")
+theme_override_font_sizes/font_size = 11
+text = "SHATTERED SUN EDITOR"
+
+[node name="AccentLine" type="ColorRect" parent="Root/TopBar/TopRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(3, 34)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.85, 0.64, 0.3, 0.9)
+pivot_offset = Vector2(0, 17)
+
+[node name="MapTitle" type="Label" parent="Root/TopBar/TopRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.92, 0.93, 0.9, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 18
+text = "Untitled Map"
+vertical_alignment = 1
+
+[node name="DirtyBadge" type="PanelContainer" parent="Root/TopBar/TopRow"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="DirtyText" type="Label" parent="Root/TopBar/TopRow/DirtyBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.9, 1)
+theme_override_font_sizes/font_size = 11
+text = "GEÄNDERT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ViewButtons" type="HBoxContainer" parent="Root/TopBar/TopRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BtnView3D" type="Button" parent="Root/TopBar/TopRow/ViewButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "3D"
+
+[node name="BtnView2D" type="Button" parent="Root/TopBar/TopRow/ViewButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+toggle_mode = true
+text = "2D"
+
+[node name="BtnViewHM" type="Button" parent="Root/TopBar/TopRow/ViewButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+toggle_mode = true
+text = "Height"
+
+[node name="FileButtons" type="HBoxContainer" parent="Root/TopBar/TopRow"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BtnNew" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+text = "Neu"
+
+[node name="BtnOpen" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(84, 0)
+layout_mode = 2
+text = "Öffnen"
+
+[node name="BtnSave" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Speichern"
+
+[node name="BtnSaveAs" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+text = "Speichern unter"
+
+[node name="ToolRail" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 14.0
+offset_top = -188.0
+offset_right = 86.0
+offset_bottom = 188.0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rail")
+
+[node name="ToolCol" type="VBoxContainer" parent="Root/ToolRail"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ToolsCaption" type="Label" parent="Root/ToolRail/ToolCol"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.66, 0.58, 1)
+theme_override_font_sizes/font_size = 10
+text = "TOOLS"
+horizontal_alignment = 1
+
+[node name="BtnOrbit" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+toggle_mode = true
+text = "Orbit"
+
+[node name="BtnRaise" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "Raise"
+
+[node name="BtnLower" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+toggle_mode = true
+text = "Lower"
+
+[node name="BtnSmooth" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+toggle_mode = true
+text = "Smooth"
+
+[node name="BtnFlatten" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+toggle_mode = true
+text = "Höhe"
+
+[node name="BtnPaint" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+toggle_mode = true
+text = "Textur"
+
+[node name="RailSep" type="HSeparator" parent="Root/ToolRail/ToolCol"]
+layout_mode = 2
+
+[node name="BtnSpawn" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+toggle_mode = true
+text = "Spawn"
+
+[node name="BtnAlloys" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+toggle_mode = true
+text = "Alloy"
+
+[node name="SideDock" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -348.0
+offset_top = 70.0
+offset_right = -14.0
+offset_bottom = -46.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="DockMargin" type="MarginContainer" parent="Root/SideDock"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="Scroll" type="ScrollContainer" parent="Root/SideDock/DockMargin"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="SectionMap" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MapHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 15
+text = "KARTE"
+
+[node name="NameEdit" type="LineEdit" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Kartenname"
+
+[node name="SizeGrid" type="GridContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 6
+columns = 2
+
+[node name="WLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Width"
+
+[node name="WidthSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 32.0
+max_value = 2048.0
+step = 16.0
+value = 256.0
+
+[node name="LLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Length"
+
+[node name="LengthSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 32.0
+max_value = 2048.0
+step = 16.0
+value = 256.0
+
+[node name="HLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Height"
+
+[node name="HeightSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 16.0
+max_value = 1024.0
+step = 8.0
+value = 128.0
+
+[node name="RLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "HM Res"
+
+[node name="ResSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 33.0
+max_value = 1025.0
+step = 2.0
+value = 257.0
+
+[node name="BtnApplySize" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Neue Karte mit Größe erstellen"
+
+[node name="Sep1" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+
+[node name="SectionTerrain" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TerrainHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 15
+text = "TERRAIN"
+
+[node name="PresetLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Biome / Textur-Set"
+
+[node name="TerrainPreset" type="OptionButton" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LayerLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Aktive Schicht (malen)"
+
+[node name="PaintLayer" type="OptionButton" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TerrainHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+text = "Preset wechselt die 8 Stratum-Texturen. Tool „Textur“ malt die gewählte Schicht auf die Splat-Map."
+
+[node name="SepTerrain" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+
+[node name="SectionBrush" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BrushHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 15
+text = "PINSEL"
+
+[node name="RadiusRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+layout_mode = 2
+
+[node name="RadiusLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/RadiusRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Radius"
+
+[node name="BrushRadiusValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/RadiusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.82, 0.48, 1)
+text = "12"
+
+[node name="BrushRadius" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 2.0
+max_value = 48.0
+step = 0.5
+value = 12.0
+
+[node name="StrengthRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+layout_mode = 2
+
+[node name="StrengthLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/StrengthRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Stärke"
+
+[node name="BrushStrengthValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/StrengthRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.82, 0.48, 1)
+text = "0.35/s"
+
+[node name="BrushStrength" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.05
+max_value = 1.5
+step = 0.05
+value = 0.35
+
+[node name="SetHeightRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+layout_mode = 2
+
+[node name="SetHeightLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/SetHeightRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Zielhöhe"
+
+[node name="SetHeightValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/SetHeightRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.82, 0.48, 1)
+text = "16.0"
+
+[node name="SetHeightSlider" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 128.0
+step = 0.5
+value = 16.0
+
+[node name="SetHeightHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+text = "Tool „Höhe“: auf Zielhöhe setzen. Shift+Klick: Höhe vom Terrain übernehmen."
+
+[node name="SepMirror" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+
+[node name="SectionMirror" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MirrorHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMirror"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 15
+text = "MIRROR"
+
+[node name="MirrorRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMirror"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BtnMirrorX" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMirror/MirrorRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mirror X"
+
+[node name="BtnMirrorZ" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMirror/MirrorRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mirror Z"
+
+[node name="MirrorHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMirror"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+text = "Pinsel-Symmetrie um die Kartenmitte. X = links/rechts, Z = vorne/hinten. Toggle: F5 / F6."
+
+[node name="Sep2" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+
+[node name="SectionWater" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="WaterHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 15
+text = "WASSER"
+
+[node name="WaterCheck" type="CheckBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Wasser aktiv"
+
+[node name="WaterRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater"]
+layout_mode = 2
+
+[node name="WaterLevelLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater/WaterRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Pegel"
+
+[node name="WaterLevelValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater/WaterRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.78, 0.9, 1)
+text = "0.0"
+
+[node name="WaterLevel" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 128.0
+step = 0.5
+
+[node name="Sep3" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+
+[node name="SectionMarkers" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MarkersHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMarkers"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 15
+text = "MARKER"
+
+[node name="BtnClearSpawns" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMarkers"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Alle Spawns löschen"
+
+[node name="BtnClearAlloys" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMarkers"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Alle Alloys löschen"
+
+[node name="HintCard" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.62, 0.56, 1)
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 3
+text = "Speichern legt Ordner MapName/ an: MapName.sanmap + Textures/heightmap.raw (+ TGA). Spawns = Army_N."
+
+[node name="StatusBar" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -36.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_status")
+
+[node name="StatusRow" type="HBoxContainer" parent="Root/StatusBar"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="StatusLabel" type="Label" parent="Root/StatusBar/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.78, 0.82, 0.76, 1)
+theme_override_font_sizes/font_size = 12
+text = "Bereit"
+vertical_alignment = 1
+
+[node name="ToolHint" type="Label" parent="Root/StatusBar/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.7, 0.4, 1)
+theme_override_font_sizes/font_size = 12
+text = "LMB halten: Terrain anheben"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="OpenDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "SanMap öffnen"
+size = Vector2i(880, 540)
+ok_button_text = "Öffnen"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.sanmap ; Sanctuary Map")
+
+[node name="SaveDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Kartenpaket speichern (legt Ordner an)"
+size = Vector2i(880, 540)
+ok_button_text = "Speichern"
+file_mode = 4
+access = 2
+filters = PackedStringArray("*.sanmap ; Sanctuary Map Package")
