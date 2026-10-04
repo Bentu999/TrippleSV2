@@ -30,8 +30,10 @@ func _update_metres() -> void:
 	var y: float = rect.size.y * 0.72
 	var x0: float = rect.size.x * 0.42
 	var x1: float = x0 + bar_width_px
-	var p0: Vector3 = _ray_hit_ground(cam, Vector2(x0, y)) as Vector3
-	var p1: Vector3 = _ray_hit_ground(cam, Vector2(x1, y)) as Vector3
+	var p0 := Vector3.ZERO
+	var p1 := Vector3.ZERO
+	p0 = _ray_hit_ground(cam, Vector2(x0, y))
+	p1 = _ray_hit_ground(cam, Vector2(x1, y))
 	if not _hit_ok(p0) or not _hit_ok(p1):
 		return
 	var dist: float = p0.distance_to(p1)

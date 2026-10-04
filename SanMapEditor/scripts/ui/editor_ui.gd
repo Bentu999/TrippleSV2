@@ -35,6 +35,7 @@ var _tool_group: ButtonGroup
 var _view_group: ButtonGroup
 var _anim_tween: Tween
 var _syncing: bool = false
+var _map_menu_open: bool = false
 
 
 func _ready() -> void:
@@ -79,6 +80,13 @@ func _ready() -> void:
 	%BtnRedo.pressed.connect(func() -> void: EditorState.redo())
 	EditorState.history_changed.connect(_sync_history_buttons)
 	%BtnApplySize.pressed.connect(_on_apply_size)
+	%PlayableXSpin.value_changed.connect(_on_playable_changed)
+	%PlayableYSpin.value_changed.connect(_on_playable_changed)
+	%PlayableWSpin.value_changed.connect(_on_playable_changed)
+	%PlayableHSpin.value_changed.connect(_on_playable_changed)
+	%BtnPlayableFull.pressed.connect(func() -> void: EditorState.reset_playable_to_full())
+	%FadeStartSpin.value_changed.connect(_on_fade_start_changed)
+	%FadeDistSpin.value_changed.connect(_on_fade_dist_changed)
 	%BtnClearSpawns.pressed.connect(func() -> void: EditorState.clear_markers(SanMapData.MARKER_SPAWN))
 	%BtnClearAlloys.pressed.connect(func() -> void: EditorState.clear_markers(SanMapData.MARKER_ALLOYS))
 	_populate_prop_blueprints()
@@ -101,7 +109,12 @@ func _ready() -> void:
 	brush_strength.value_changed.connect(_on_brush_strength)
 	set_height_slider.value_changed.connect(_on_set_height)
 	%RampAngleSlider.value_changed.connect(_on_ramp_angle)
+	%RampLengthSlider.value_changed.connect(_on_ramp_length)
+	%BtnRampRotLeft.pressed.connect(func() -> void: _on_ramp_rotate(15.0))
+	%BtnRampRotRight.pressed.connect(func() -> void: _on_ramp_rotate(-15.0))
 	%PathAngleSlider.value_changed.connect(_on_path_angle)
+	_populate_shape_height_modes()
+	%ShapeHeightMode.item_selected.connect(_on_shape_height_mode_selected)
 	water_check.toggled.connect(_on_water_toggled)
 	water_level.value_changed.connect(_on_water_level)
 	%ScaleGuidesCheck.toggled.connect(_on_scale_guides_toggled)
@@ -120,11 +133,52 @@ func _ready() -> void:
 	EditorState.measurement_changed.connect(_update_status)
 	EditorState.pathing_changed.connect(_sync_pathing_status)
 
+	%BtnMapMenu.toggled.connect(_on_map_menu_toggled)
+	%MapMenuPanel.visible = false
+	_map_menu_open = false
+
 	_play_intro_motion()
 	_sync_from_state()
 	_highlight_views()
 	_sync_history_buttons()
+	_update_tool_context_panels()
 	_update_status()
+
+
+func _on_map_menu_toggled(pressed: bool) -> void:
+	_map_menu_open = pressed
+	%MapMenuPanel.visible = pressed
+	%BtnMapMenu.text = "Karte ▴" if pressed else "Karte ▾"
+	if pressed:
+		_position_map_menu_panel()
+
+
+func _position_map_menu_panel() -> void:
+	## Anchor the dropdown under the Karte button (left of 3D).
+	var btn: Control = %BtnMapMenu
+	var panel: Control = %MapMenuPanel
+	var btn_rect := btn.get_global_rect()
+	var root := get_node("Root") as Control
+	var root_rect: Rect2 = root.get_global_rect()
+	var local_x := btn_rect.position.x - root_rect.position.x
+	var local_y := btn_rect.end.y - root_rect.position.y + 6.0
+	panel.offset_left = local_x
+	panel.offset_top = local_y
+	panel.offset_right = local_x + 366.0
+	panel.offset_bottom = local_y + 618.0
+
+
+func _input(event: InputEvent) -> void:
+	## Close map dropdown when clicking outside it.
+	if not _map_menu_open:
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var panel: Control = %MapMenuPanel
+		var btn: Control = %BtnMapMenu
+		var mouse := panel.get_global_mouse_position()
+		if not panel.get_global_rect().has_point(mouse) and not btn.get_global_rect().has_point(mouse):
+			%BtnMapMenu.set_pressed_no_signal(false)
+			_on_map_menu_toggled(false)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -231,7 +285,121 @@ func _highlight_views() -> void:
 
 func _on_tool_changed() -> void:
 	_highlight_tools()
+	_update_tool_context_panels()
 	_update_status()
+
+
+func _update_tool_context_panels() -> void:
+	## Show only settings that belong to the active tool.
+	var tool := EditorState.active_tool
+	var is_raise := tool == EditorState.Tool.RAISE or tool == EditorState.Tool.LOWER
+	var is_smooth := tool == EditorState.Tool.SMOOTH
+	var is_set_h := tool == EditorState.Tool.SET_HEIGHT
+	var is_paint := tool == EditorState.Tool.PAINT_TEXTURE
+	var is_measure := tool == EditorState.Tool.MEASURE_HEIGHT
+	var is_geom := tool == EditorState.Tool.SHAPE_LINE \
+		or tool == EditorState.Tool.SHAPE_CIRCLE \
+		or tool == EditorState.Tool.SHAPE_ARC \
+		or tool == EditorState.Tool.SHAPE_PLATEAU
+	var is_ramp := tool == EditorState.Tool.SHAPE_RAMP
+	var is_path := tool == EditorState.Tool.PATHING
+	var is_marker := tool == EditorState.Tool.MARKER_SPAWN or tool == EditorState.Tool.MARKER_ALLOYS
+	var is_prop := tool == EditorState.Tool.PLACE_PROP
+	var uses_radius := is_raise or is_smooth or is_set_h or is_paint or is_geom or is_ramp
+	var uses_strength := is_raise or is_smooth or is_paint
+	var uses_height := is_set_h or is_measure or is_geom or is_ramp
+	var uses_mirror := is_raise or is_smooth or is_set_h or is_paint or is_geom or is_ramp or is_prop
+	var show_brush := uses_radius or uses_strength or uses_height
+	var show_tool_extra := is_geom or is_ramp or is_path
+	var show_terrain := is_paint
+
+	%SectionTerrain.visible = show_terrain
+	%SepTerrain.visible = show_brush
+	%SectionBrush.visible = show_brush
+	%BrushHeader.text = _tool_settings_header(tool)
+	%RadiusRow.visible = uses_radius
+	%BrushRadius.visible = uses_radius
+	%RadiusLabel.text = "Breite (m)" if (is_geom or is_ramp) else "Radius (m)"
+	%StrengthRow.visible = uses_strength
+	%BrushStrength.visible = uses_strength
+	%SetHeightRow.visible = uses_height
+	%SetHeightSlider.visible = uses_height
+	%SetHeightLabel.text = "Höhe (m)" if is_ramp else "Zielhöhe (m)"
+	%SetHeightHint.visible = uses_height
+	if is_ramp:
+		%SetHeightHint.text = "Endhöhe der fertigen Rampe. Shift+Klick: Höhe vom Terrain. Breite = Pinselradius."
+	elif is_geom:
+		%SetHeightHint.text = "Zielhöhe für Formen. Form+Höhe: Setzen / Anheben / Absenken. Shift+Klick sampelt."
+	elif is_set_h or is_measure:
+		%SetHeightHint.text = "Zielhöhe für Ebnen. Shift+Klick oder Measure-Pin übernimmt Terrainhöhe."
+	else:
+		%SetHeightHint.text = "Zielhöhe."
+
+	%SepShapes.visible = show_tool_extra
+	%SectionShapes.visible = show_tool_extra
+	%ShapesHeader.text = _tool_settings_header(tool)
+	%ShapeHeightLabel.visible = is_geom
+	%ShapeHeightMode.visible = is_geom
+	%RampAngleRow.visible = is_ramp
+	%RampAngleSlider.visible = is_ramp
+	%RampLengthRow.visible = is_ramp
+	%RampLengthSlider.visible = is_ramp
+	%RampRotateRow.visible = is_ramp
+	%PathAngleRow.visible = is_path
+	%PathAngleSlider.visible = is_path
+	%PathStatusLabel.visible = is_path
+	%ShapesHint.visible = show_tool_extra
+	if is_ramp:
+		%ShapesHint.text = "Hover zeigt die Rampe. Drehen-Buttons ändern die Richtung. LMB bestätigt die Platzierung."
+	elif is_geom:
+		%ShapesHint.text = "Ziehen zum Zeichnen. Bogen: 3 Klicks. Esc/RMB bricht ab."
+	elif is_path:
+		%ShapesHint.text = "Rot = zu steil. Zwei Klicks prüfen einen Pfad."
+	else:
+		%ShapesHint.text = ""
+
+	%SepMirror.visible = uses_mirror
+	%SectionMirror.visible = uses_mirror
+	%Sep3.visible = is_marker
+	%SectionMarkers.visible = is_marker
+	%SepProps.visible = is_prop
+	%SectionProps.visible = is_prop
+
+
+func _tool_settings_header(tool: EditorState.Tool) -> String:
+	match tool:
+		EditorState.Tool.RAISE:
+			return "ANHEBEN"
+		EditorState.Tool.LOWER:
+			return "ABSENKEN"
+		EditorState.Tool.SMOOTH:
+			return "GLÄTTEN"
+		EditorState.Tool.SET_HEIGHT:
+			return "HÖHE SETZEN"
+		EditorState.Tool.MEASURE_HEIGHT:
+			return "MESSEN"
+		EditorState.Tool.PAINT_TEXTURE:
+			return "MALEN"
+		EditorState.Tool.SHAPE_LINE:
+			return "LINIE"
+		EditorState.Tool.SHAPE_CIRCLE:
+			return "KREIS"
+		EditorState.Tool.SHAPE_ARC:
+			return "BOGEN"
+		EditorState.Tool.SHAPE_PLATEAU:
+			return "PLATEAU"
+		EditorState.Tool.SHAPE_RAMP:
+			return "RAMPE"
+		EditorState.Tool.PATHING:
+			return "PATHING"
+		EditorState.Tool.MARKER_SPAWN:
+			return "SPAWN"
+		EditorState.Tool.MARKER_ALLOYS:
+			return "ALLOYS"
+		EditorState.Tool.PLACE_PROP:
+			return "PROP"
+		_:
+			return "WERKZEUG"
 
 
 func _on_view_changed() -> void:
@@ -250,6 +418,8 @@ func _sync_from_state() -> void:
 	length_spin.value = m.length
 	height_spin.value = m.height
 	res_spin.value = m.heightmap_resolution
+	_sync_playable_spins()
+	_sync_fade_spins()
 	brush_radius.set_value_no_signal(EditorState.brush_radius)
 	brush_strength.set_value_no_signal(EditorState.brush_strength)
 	brush_radius_value.text = "%.0f m" % EditorState.brush_radius
@@ -260,6 +430,9 @@ func _sync_from_state() -> void:
 	set_height_value.text = "%.1f m" % EditorState.set_height_world
 	%RampAngleSlider.set_value_no_signal(EditorState.ramp_angle_deg)
 	%RampAngleValue.text = "%.1f°" % EditorState.ramp_angle_deg
+	%RampLengthSlider.set_value_no_signal(EditorState.ramp_length_m)
+	%RampLengthValue.text = "%.0f m" % EditorState.ramp_length_m
+	_sync_shape_height_mode()
 	%PathAngleSlider.set_value_no_signal(EditorState.pathing_max_angle_deg)
 	%PathAngleValue.text = "%.1f°" % EditorState.pathing_max_angle_deg
 	_sync_pathing_status()
@@ -526,17 +699,30 @@ func _hint_for_tool(tool: EditorState.Tool) -> String:
 				" · Mirror" if (EditorState.mirror_x_enabled or EditorState.mirror_z_enabled) else "",
 			]
 		EditorState.Tool.SHAPE_LINE:
-			return "Ziehen: Linie auf %.1f m · Breite = Pinselradius" % EditorState.set_height_world
+			return "Ziehen: Linie · %s → %.1f m · Breite = Pinselradius" % [
+				_shape_height_mode_label(),
+				EditorState.set_height_world,
+			]
 		EditorState.Tool.SHAPE_CIRCLE:
-			return "Zentrum → Radius ziehen: Kreis auf %.1f m" % EditorState.set_height_world
+			return "Zentrum → Radius: Kreis · %s → %.1f m" % [
+				_shape_height_mode_label(),
+				EditorState.set_height_world,
+			]
 		EditorState.Tool.SHAPE_ARC:
-			return "3 Klicks: Start · Punkt auf Bogen · Ende · Breite = Pinselradius"
+			return "3 Klicks: Bogen · %s → %.1f m · Breite = Pinselradius" % [
+				_shape_height_mode_label(),
+				EditorState.set_height_world,
+			]
 		EditorState.Tool.SHAPE_PLATEAU:
-			return "Ziehen: Rechteck-Plateau auf %.1f m" % EditorState.set_height_world
+			return "Ziehen: Plateau · %s → %.1f m" % [
+				_shape_height_mode_label(),
+				EditorState.set_height_world,
+			]
 		EditorState.Tool.SHAPE_RAMP:
-			return "Ziehen: Rampe von Terrainhöhe → %.1f m bei %.1f°" % [
+			return "Hover-Vorschau · Drehen-Buttons · LMB platziert · %.1f m · %.1f° · %.0f m" % [
 				EditorState.set_height_world,
 				EditorState.ramp_angle_deg,
+				EditorState.ramp_length_m,
 			]
 		EditorState.Tool.PATHING:
 			if not EditorState.pathing_status.is_empty():
@@ -583,8 +769,12 @@ func _on_brush_strength(v: float) -> void:
 func _on_set_height(v: float) -> void:
 	if _syncing:
 		return
-	EditorState.set_height_world = v
-	set_height_value.text = "%.1f m" % v
+	if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP:
+		EditorState.set_ramp_end_height(v)
+		_sync_ramp_linked_spins()
+	else:
+		EditorState.set_height_world = v
+	set_height_value.text = "%.1f m" % EditorState.set_height_world
 	_update_status()
 
 
@@ -592,8 +782,69 @@ func _on_ramp_angle(v: float) -> void:
 	if _syncing:
 		return
 	EditorState.set_ramp_angle_deg(v)
-	%RampAngleValue.text = "%.1f°" % EditorState.ramp_angle_deg
+	_sync_ramp_linked_spins()
 	_update_status()
+
+
+func _on_ramp_length(v: float) -> void:
+	if _syncing:
+		return
+	EditorState.set_ramp_length_m(v)
+	_sync_ramp_linked_spins()
+	_update_status()
+
+
+func _on_ramp_rotate(yaw_deg: float) -> void:
+	EditorState.rotate_ramp_aim_deg(yaw_deg)
+	_update_status()
+
+
+func _sync_ramp_linked_spins() -> void:
+	_syncing = true
+	%RampAngleSlider.set_value_no_signal(EditorState.ramp_angle_deg)
+	%RampAngleValue.text = "%.1f°" % EditorState.ramp_angle_deg
+	%RampLengthSlider.set_value_no_signal(EditorState.ramp_length_m)
+	%RampLengthValue.text = "%.0f m" % EditorState.ramp_length_m
+	set_height_slider.set_value_no_signal(EditorState.set_height_world)
+	set_height_value.text = "%.1f m" % EditorState.set_height_world
+	_syncing = false
+
+
+func _populate_shape_height_modes() -> void:
+	var btn: OptionButton = %ShapeHeightMode
+	btn.clear()
+	btn.add_item("Setzen (absolut)", TerrainShapes.HeightMode.SET)
+	btn.add_item("Anheben → Zielhöhe", TerrainShapes.HeightMode.RAISE)
+	btn.add_item("Absenken → Zielhöhe", TerrainShapes.HeightMode.LOWER)
+
+
+func _sync_shape_height_mode() -> void:
+	var btn: OptionButton = %ShapeHeightMode
+	var mode := EditorState.shape_height_mode
+	for i in btn.item_count:
+		if btn.get_item_id(i) == mode:
+			btn.select(i)
+			return
+	if btn.item_count > 0:
+		btn.select(0)
+
+
+func _on_shape_height_mode_selected(index: int) -> void:
+	if _syncing:
+		return
+	var btn: OptionButton = %ShapeHeightMode
+	EditorState.set_shape_height_mode(btn.get_item_id(index))
+	_update_status()
+
+
+func _shape_height_mode_label() -> String:
+	match EditorState.shape_height_mode:
+		TerrainShapes.HeightMode.RAISE:
+			return "Anheben"
+		TerrainShapes.HeightMode.LOWER:
+			return "Absenken"
+		_:
+			return "Setzen"
 
 
 func _on_path_angle(v: float) -> void:
@@ -629,6 +880,11 @@ func sync_set_height_from_state() -> void:
 	set_height_slider.max_value = float(EditorState.map.height)
 	set_height_slider.set_value_no_signal(EditorState.set_height_world)
 	set_height_value.text = "%.1f m" % EditorState.set_height_world
+	if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP:
+		%RampAngleSlider.set_value_no_signal(EditorState.ramp_angle_deg)
+		%RampAngleValue.text = "%.1f°" % EditorState.ramp_angle_deg
+		%RampLengthSlider.set_value_no_signal(EditorState.ramp_length_m)
+		%RampLengthValue.text = "%.0f m" % EditorState.ramp_length_m
 	_syncing = false
 	_update_status()
 
@@ -639,6 +895,52 @@ func _on_new() -> void:
 
 func _on_apply_size() -> void:
 	EditorState.new_map(int(width_spin.value), int(length_spin.value), int(height_spin.value), int(res_spin.value))
+
+
+func _sync_playable_spins() -> void:
+	var m := EditorState.map
+	var area := m.get_playable_area()
+	%PlayableXSpin.max_value = float(m.width)
+	%PlayableYSpin.max_value = float(m.length)
+	%PlayableWSpin.max_value = float(m.width)
+	%PlayableHSpin.max_value = float(m.length)
+	%PlayableXSpin.set_value_no_signal(area["x"])
+	%PlayableYSpin.set_value_no_signal(area["y"])
+	%PlayableWSpin.set_value_no_signal(area["width"])
+	%PlayableHSpin.set_value_no_signal(area["height"])
+
+
+func _sync_fade_spins() -> void:
+	var m := EditorState.map
+	%FadeStartSpin.set_value_no_signal(m.fade_start_distance)
+	%FadeDistSpin.set_value_no_signal(m.fade_distance)
+
+
+func _on_playable_changed(_value: float = 0.0) -> void:
+	if _syncing:
+		return
+	EditorState.set_playable_area(
+		%PlayableXSpin.value,
+		%PlayableYSpin.value,
+		%PlayableWSpin.value,
+		%PlayableHSpin.value
+	)
+	# Reflect clamped values after EditorState applies bounds.
+	_syncing = true
+	_sync_playable_spins()
+	_syncing = false
+
+
+func _on_fade_start_changed(value: float) -> void:
+	if _syncing:
+		return
+	EditorState.set_fade_start_distance(value)
+
+
+func _on_fade_dist_changed(value: float) -> void:
+	if _syncing:
+		return
+	EditorState.set_fade_distance(value)
 
 
 func _on_save() -> void:

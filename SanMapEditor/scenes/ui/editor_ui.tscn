@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://sanmapeditorui01"]
+[gd_scene load_steps=11 format=3 uid="uid://sanmapeditorui01"]
 
 [ext_resource type="Script" path="res://scripts/ui/editor_ui.gd" id="1_ui"]
 [ext_resource type="Theme" path="res://resources/theme/editor_theme.tres" id="2_theme"]
@@ -15,6 +15,25 @@ content_margin_bottom = 10.0
 bg_color = Color(0.05, 0.065, 0.06, 0.96)
 border_width_bottom = 1
 border_color = Color(0.78, 0.58, 0.28, 0.28)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mapmenu"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.045, 0.058, 0.054, 0.97)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.78, 0.58, 0.28, 0.35)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rail"]
 content_margin_left = 8.0
@@ -146,6 +165,14 @@ text = "GEÄNDERT"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="BtnMapMenu" type="Button" parent="Root/TopBar/TopRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+toggle_mode = true
+tooltip_text = "Karte, Playable Area, Fade und Wasser"
+text = "Karte ▾"
+
 [node name="ViewButtons" type="HBoxContainer" parent="Root/TopBar/TopRow"]
 layout_mode = 2
 theme_override_constants/separation = 4
@@ -215,6 +242,36 @@ layout_mode = 2
 disabled = true
 tooltip_text = "Wiederholen (Ctrl+Y)"
 text = "Redo"
+
+[node name="MapMenuPanel" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 0
+offset_left = 104.0
+offset_top = 62.0
+offset_right = 470.0
+offset_bottom = 680.0
+mouse_filter = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mapmenu")
+
+[node name="MapMenuMargin" type="MarginContainer" parent="Root/MapMenuPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="MapMenuScroll" type="ScrollContainer" parent="Root/MapMenuPanel/MapMenuMargin"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MapMenuVBox" type="VBoxContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
 
 [node name="ToolRail" type="PanelContainer" parent="Root"]
 unique_name_in_owner = true
@@ -405,34 +462,34 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
 
-[node name="SectionMap" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+[node name="SectionMap" type="VBoxContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MapHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+[node name="MapHeader" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
 theme_override_font_sizes/font_size = 15
 text = "KARTE"
 
-[node name="NameEdit" type="LineEdit" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+[node name="NameEdit" type="LineEdit" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Kartenname"
 
-[node name="SizeGrid" type="GridContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+[node name="SizeGrid" type="GridContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 layout_mode = 2
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 6
 columns = 2
 
-[node name="WLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+[node name="WLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap/SizeGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
 text = "Width (m)"
 
-[node name="WidthSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+[node name="WidthSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap/SizeGrid"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -441,12 +498,12 @@ max_value = 2048.0
 step = 16.0
 value = 256.0
 
-[node name="LLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+[node name="LLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap/SizeGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
 text = "Length (m)"
 
-[node name="LengthSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+[node name="LengthSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap/SizeGrid"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 32.0
@@ -454,12 +511,12 @@ max_value = 2048.0
 step = 16.0
 value = 256.0
 
-[node name="HLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+[node name="HLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap/SizeGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
 text = "Height (m)"
 
-[node name="HeightSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+[node name="HeightSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap/SizeGrid"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 16.0
@@ -467,12 +524,12 @@ max_value = 1024.0
 step = 8.0
 value = 128.0
 
-[node name="RLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+[node name="RLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap/SizeGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
 text = "HM Res"
 
-[node name="ResSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
+[node name="ResSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap/SizeGrid"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 33.0
@@ -480,28 +537,155 @@ max_value = 1025.0
 step = 2.0
 value = 257.0
 
-[node name="BtnApplySize" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+[node name="BtnApplySize" type="Button" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Neue Karte mit Größe erstellen"
 
-[node name="ScaleGuidesCheck" type="CheckBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+[node name="ScaleGuidesCheck" type="CheckBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 text = "Maßstab-Hilfen (Grid / 2 m)"
 
-[node name="ScaleHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+[node name="ScaleHint" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.52, 1)
 theme_override_font_sizes/font_size = 11
 autowrap_mode = 3
 text = "1 Einheit = 1 m Spielwelt. Gelbes Grid, Kantenmaße, 2-m-Figur an der Playable-Ecke."
 
+[node name="SepPlayable" type="HSeparator" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox"]
+layout_mode = 2
+
+[node name="SectionPlayable" type="VBoxContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PlayableHeader" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 15
+text = "PLAYABLE AREA"
+
+[node name="PlayableGrid" type="GridContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 6
+columns = 2
+
+[node name="PlayableXLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "X (m)"
+
+[node name="PlayableXSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 2048.0
+step = 1.0
+value = 0.0
+
+[node name="PlayableYLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Z / Y (m)"
+
+[node name="PlayableYSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.0
+max_value = 2048.0
+step = 1.0
+value = 0.0
+
+[node name="PlayableWLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Width (m)"
+
+[node name="PlayableWSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 2048.0
+step = 1.0
+value = 256.0
+
+[node name="PlayableHLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Length (m)"
+
+[node name="PlayableHSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 2048.0
+step = 1.0
+value = 256.0
+
+[node name="BtnPlayableFull" type="Button" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Auf volle Karte setzen"
+
+[node name="PlayableHint" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.52, 1)
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+text = "Spielbarer Bereich innerhalb der Karte. Rand außerhalb wird im Spiel von Infinite Terrain fortgesetzt (nicht abschaltbar)."
+
+[node name="FadeGrid" type="GridContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 6
+columns = 2
+
+[node name="FadeStartLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/FadeGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Fade Start"
+
+[node name="FadeStartSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/FadeGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 4096.0
+step = 1.0
+value = 1.0
+
+[node name="FadeDistLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/FadeGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Fade Dist"
+
+[node name="FadeDistSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/FadeGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.0
+max_value = 4096.0
+step = 1.0
+value = 128.0
+
+[node name="FadeHint" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.52, 1)
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+text = "fadeStartDistance / fadeDistance steuern den Übergang des Infinite Terrain im Spiel (Editor zeigt nur Overlay)."
+
 [node name="Sep1" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+visible = false
 layout_mode = 2
 
 [node name="SectionTerrain" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -538,13 +722,16 @@ autowrap_mode = 3
 text = "Schicht 1–8 mit festen Namen (Boden A … Stein) — in jedem Biome gleich. Die Dateipfade wechseln mit dem Biome."
 
 [node name="SepTerrain" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="SectionBrush" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="BrushHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
@@ -552,9 +739,11 @@ theme_override_font_sizes/font_size = 15
 text = "PINSEL"
 
 [node name="RadiusRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="RadiusLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/RadiusRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
@@ -575,6 +764,7 @@ step = 0.5
 value = 12.0
 
 [node name="StrengthRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="StrengthLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/StrengthRow"]
@@ -598,9 +788,11 @@ step = 0.05
 value = 0.35
 
 [node name="SetHeightRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="SetHeightLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/SetHeightRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
@@ -620,33 +812,49 @@ step = 0.5
 value = 16.0
 
 [node name="SetHeightHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
 theme_override_font_sizes/font_size = 11
 autowrap_mode = 3
-text = "Tool „Höhe“ / Formen: Zielhöhe. Shift+Klick: Höhe vom Terrain übernehmen. Pinselradius = Linien-/Rampenbreite."
+text = "Zielhöhe für Ebnen / Formen / Rampe. Shift+Klick: Höhe vom Terrain übernehmen."
 
 [node name="SepShapes" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="SectionShapes" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="ShapesHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.78, 0.55, 1)
 theme_override_font_sizes/font_size = 13
-text = "Formen · Rampe · Pathing"
+text = "WERKZEUG"
+
+[node name="ShapeHeightLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Form + Höhe"
+
+[node name="ShapeHeightMode" type="OptionButton" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Wie Formen die Zielhöhe anwenden: setzen, nur anheben oder nur absenken"
 
 [node name="RampAngleRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="RampAngleLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampAngleRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Rampenwinkel"
+text = "Winkel"
 
 [node name="RampAngleValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampAngleRow"]
 unique_name_in_owner = true
@@ -662,7 +870,51 @@ max_value = 60.0
 step = 0.5
 value = 15.0
 
+[node name="RampLengthRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RampLengthLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampLengthRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Länge (m)"
+
+[node name="RampLengthValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampLengthRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.82, 0.48, 1)
+text = "32 m"
+
+[node name="RampLengthSlider" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 4.0
+max_value = 256.0
+step = 1.0
+value = 32.0
+
+[node name="RampRotateRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnRampRotLeft" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampRotateRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Rampe 15° nach links drehen"
+text = "↶ Drehen"
+
+[node name="BtnRampRotRight" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampRotateRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Rampe 15° nach rechts drehen"
+text = "Drehen ↷"
+
 [node name="PathAngleRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="PathAngleLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/PathAngleRow"]
@@ -694,16 +946,19 @@ autowrap_mode = 3
 text = "Path-Tool: rote Steigungen über Limit · zwei Klicks = Pfadprüfung"
 
 [node name="ShapesHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
 theme_override_font_sizes/font_size = 11
 autowrap_mode = 3
-text = "Linie/Kreis/Plateau/Rampe: ziehen. Bogen: 3 Klicks. Esc/RMB bricht ab."
+text = "Einstellungen zum aktiven Werkzeug."
 
 [node name="SepMirror" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="SectionMirror" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -737,50 +992,54 @@ theme_override_font_sizes/font_size = 11
 autowrap_mode = 3
 text = "Pinsel-Symmetrie um die Kartenmitte. X = links/rechts, Z = vorne/hinten. Toggle: F5 / F6."
 
-[node name="Sep2" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+[node name="Sep2" type="HSeparator" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SectionWater" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+[node name="SectionWater" type="VBoxContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="WaterHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater"]
+[node name="WaterHeader" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionWater"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
 theme_override_font_sizes/font_size = 15
 text = "WASSER"
 
-[node name="WaterCheck" type="CheckBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater"]
+[node name="WaterCheck" type="CheckBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionWater"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Wasser aktiv"
 
-[node name="WaterRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater"]
+[node name="WaterRow" type="HBoxContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionWater"]
 layout_mode = 2
 
-[node name="WaterLevelLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater/WaterRow"]
+[node name="WaterLevelLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionWater/WaterRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
 text = "Pegel (m)"
 
-[node name="WaterLevelValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater/WaterRow"]
+[node name="WaterLevelValue" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionWater/WaterRow"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.78, 0.9, 1)
 text = "0.0 m"
 
-[node name="WaterLevel" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater"]
+[node name="WaterLevel" type="HSlider" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionWater"]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 128.0
 step = 0.5
 
 [node name="Sep3" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="SectionMarkers" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -802,9 +1061,11 @@ layout_mode = 2
 text = "Alle Alloys löschen"
 
 [node name="SepProps" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="SectionProps" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 

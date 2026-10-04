@@ -226,16 +226,60 @@ func _ensure_core_markers() -> void:
 		markers[MARKER_ALLOYS] = {"resource": true, "transforms": {}}
 
 
-func resize(new_width: int, new_length: int, new_height: int, new_resolution: int) -> void:
+func resize(new_width: int, new_length: int, new_height: int, new_resolution: int, fill_playable: bool = false) -> void:
 	width = maxi(new_width, 16)
 	length = maxi(new_length, 16)
 	height = maxi(new_height, 16)
 	heightmap_resolution = maxi(new_resolution, 17)
+	if fill_playable:
+		reset_playable_to_full()
+	else:
+		clamp_playable_area()
+
+
+func reset_playable_to_full() -> void:
 	areas[AREA_PLAYABLE] = {
-		"x": float(areas.get(AREA_PLAYABLE, {}).get("x", 0.0)),
-		"y": float(areas.get(AREA_PLAYABLE, {}).get("y", 0.0)),
+		"x": 0.0,
+		"y": 0.0,
 		"width": float(width),
 		"height": float(length),
+	}
+
+
+func get_playable_area() -> Dictionary:
+	var area: Dictionary = areas.get(AREA_PLAYABLE, {})
+	return {
+		"x": float(area.get("x", 0.0)),
+		"y": float(area.get("y", 0.0)),
+		"width": float(area.get("width", float(width))),
+		"height": float(area.get("height", float(length))),
+	}
+
+
+func set_playable_area(x: float, y: float, area_width: float, area_height: float) -> void:
+	areas[AREA_PLAYABLE] = {
+		"x": x,
+		"y": y,
+		"width": area_width,
+		"height": area_height,
+	}
+	clamp_playable_area()
+
+
+func clamp_playable_area() -> void:
+	## Keep PlayableArea inside map bounds; do not force it to fill the map.
+	var area := get_playable_area()
+	var max_w := float(width)
+	var max_l := float(length)
+	var w := clampf(area["width"], 1.0, max_w)
+	var h := clampf(area["height"], 1.0, max_l)
+	var x := clampf(area["x"], 0.0, max_w - w)
+	var y := clampf(area["y"], 0.0, max_l - h)
+	areas[AREA_PLAYABLE] = {
+		"x": x,
+		"y": y,
+		"width": w,
+		"height": h,
 	}
 
 
@@ -537,12 +581,9 @@ static func from_dict(data: Dictionary) -> SanMapData:
 
 	map._ensure_core_markers()
 	if not map.areas.has(AREA_PLAYABLE):
-		map.areas[AREA_PLAYABLE] = {
-			"x": 0.0,
-			"y": 0.0,
-			"width": float(map.width),
-			"height": float(map.length),
-		}
+		map.reset_playable_to_full()
+	else:
+		map.clamp_playable_area()
 	if map.stratum_layers.is_empty():
 		map._init_default_strata()
 	return map

@@ -25,6 +25,19 @@ Externer Karteneditor für **Sanctuary: Shattered Sun** (`.sanmap` Format Versio
 
 Props: Tool **Prop** wählen, Blueprint im Dock auswählen, LMB auf Terrain. Scale und Zufalls-Yaw im Dock. Mirror gilt auch hier. Im Editor erscheinen farbige Proxy-Boxen; im Spiel laden die `.santp`-Blueprints.
 
+## Playable Area und Infinite Terrain
+
+Sanctuary setzt die Karte außerhalb des spielbaren Bereichs mit **Infinite Terrain** fort (Randspiegelung / Fortsetzung in die Ferne). Das ist ein Engine-Feature und **nicht abschaltbar**.
+
+| Einstellung | Wo | Wirkung |
+|-------------|-----|---------|
+| **Width / Length** | Dock KARTE | Gesamte authored Map (m) |
+| **Playable Area** (X, Z/Y, Width, Length) | Top-Bar „Karte“ → PLAYABLE AREA | Spielbarer Rechteck-Bereich in `.sanmap` → `areas.PlayableArea`; im Editor als cyanes Rechteck inkl. Eckpfosten sichtbar |
+| **Fade Start / Fade Dist** | Dock PLAYABLE AREA | `fadeStartDistance` / `fadeDistance` – Übergang des Infinite Terrain im Spiel |
+| **Mirror X / Mirror Z** | Dock MIRROR (F5/F6) | Nur Editor-Pinsel-Symmetrie, **kein** Welt-Spiegel |
+
+Empfehlung: Map größer als die Arena wählen und Playable Area einschieben, damit ein gestalteter Randstreifen vor dem Infinite Terrain liegt. Neue Karten starten mit Playable = volle Map; beim Resize bleiben kleinere Playable-Rechtecke erhalten (werden nur an die neuen Grenzen geklemmt).
+
 ## Dateiformat (wie offizielle Karten, z. B. The Forge)
 
 ```
@@ -48,7 +61,9 @@ MeineKarte/
 - Pinsel: Anheben, Absenken, Glätten, Ebnen
 - Marker: Spawn, Alloys
 - Props platzieren (Blueprint-Gruppen, Undo, Proxy-Vorschau)
-- PlayableArea-Overlay
+- PlayableArea-Overlay (3D-Rahmen + 2D-Outline) + Editor im Karte-Menü (X/Z, Größe, volle Karte)
+- Neue Karten starten ohne Wasser; Wasser im Karte-Menü aktivierbar
+- Fade-Felder (`fadeStartDistance` / `fadeDistance`) im Dock
 - Wasser-Toggle + Level
 
 ## Nächste Schritte (geplant)

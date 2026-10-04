@@ -2,8 +2,9 @@ class_name TerrainPresets
 extends RefCounted
 ## Named terrain material presets (stratum sets) used by official maps.
 
-## Stable paint-slot labels — identical for every biome (paths still differ).
-const LAYER_ROLE_NAMES: Array[String] = [
+## Stable paint-slot labels - identical for every biome (paths still differ).
+## Untyped const Array of string literals is a valid constant expression in GDScript 4.7.
+const LAYER_ROLE_NAMES = [
 	"Boden A",
 	"Boden B",
 	"Detail",

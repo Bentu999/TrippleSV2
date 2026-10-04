@@ -4,7 +4,8 @@ extends RefCounted
 
 
 const MAX_PREVIEW_SIZE := 1024
-const FALLBACK_LAYER_COLORS: Array[Color] = [
+## Typed Color arrays are not const expressions in GDScript 4.7.
+static var FALLBACK_LAYER_COLORS: Array[Color] = [
 	Color(0.42, 0.48, 0.28),
 	Color(0.55, 0.52, 0.38),
 	Color(0.48, 0.46, 0.44),
@@ -15,7 +16,7 @@ const FALLBACK_LAYER_COLORS: Array[Color] = [
 	Color(0.70, 0.68, 0.62),
 ]
 
-const SPAWN_COLORS: Array[Color] = [
+static var SPAWN_COLORS: Array[Color] = [
 	Color(0.22, 0.78, 0.28),
 	Color(0.86, 0.18, 0.16),
 	Color(0.92, 0.86, 0.62),
@@ -284,8 +285,8 @@ static func _draw_number(img: Image, cx: int, cy: int, number: int, color: Color
 	var glyph_h := 5 * scale
 	var gap := scale
 	var total_w := text.length() * glyph_w + maxi(text.length() - 1, 0) * gap
-	var ox := cx - total_w / 2
-	var oy := cy - glyph_h / 2
+	var ox := cx - int(total_w / 2.0)
+	var oy := cy - int(glyph_h / 2.0)
 	for ci in text.length():
 		var ch := int(text.substr(ci, 1))
 		var rows: Array = glyphs.get(ch, glyphs[0])

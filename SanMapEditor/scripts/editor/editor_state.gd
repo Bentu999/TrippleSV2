@@ -1,6 +1,7 @@
 extends Node
 ## Global editor state (autoload).
 
+
 signal map_changed
 ## Emitted after height edits. Empty rect = full texture refresh.
 signal heights_changed(dirty: Rect2i)
@@ -66,10 +67,20 @@ var paint_layer: int = 0
 var brush_radius: float = 12.0
 ## Normalized height change per second at brush center (frame-rate independent).
 var brush_strength: float = 0.35
-## Absolute world-space target height for SET_HEIGHT brush / shape fill.
+## Absolute world-space target height for SET_HEIGHT brush / shape fill / ramp end.
 var set_height_world: float = 16.0
+## How shapes combine with Zielhöhe: SET / RAISE / LOWER (see TerrainShapes.HeightMode).
+var shape_height_mode: int = TerrainShapes.HeightMode.SET
 ## Target slope for SHAPE_RAMP (degrees).
 var ramp_angle_deg: float = 15.0
+## Horizontal length of the finished ramp (metres). Direction comes from aim / rotate buttons.
+var ramp_length_m: float = 32.0
+## Last sampled start height under the ramp cursor (links angle ↔ length in the UI).
+var ramp_ref_start_h: float = 16.0
+## Horizontal aim direction for ramp preview / placement (unit XZ vector).
+var ramp_aim_dir: Vector3 = Vector3(0.0, 0.0, 1.0)
+## True after the user rotates / drags the ramp aim (stops camera auto-aim).
+var ramp_aim_manual: bool = false
 ## Max walkable slope for PATHING checks (degrees).
 var pathing_max_angle_deg: float = 30.0
 ## Live brush symmetry across map center (X and/or Z).
@@ -138,10 +149,9 @@ func new_map(width: int, length: int, height: int, resolution: int) -> void:
 	var hm_res := resolution
 	if width == length and resolution <= 0:
 		hm_res = width + 1
-	map.resize(width, length, height, hm_res)
+	map.resize(width, length, height, hm_res, true)
 	TerrainPresets.apply(map, terrain_preset_id if not terrain_preset_id.is_empty() else "highlands")
-	# Dry starting plateau above a shallow water table (matches typical Sanctuary maps).
-	map.has_water = true
+	map.has_water = false
 	map.water_level = _default_water_level_world()
 	_alloc_flat_heights(_default_land_height_normalized())
 	_alloc_default_splats()
@@ -255,6 +265,81 @@ func set_water_level(level: float) -> void:
 	map_changed.emit()
 
 
+func set_playable_area(x: float, y: float, area_width: float, area_height: float) -> void:
+	var before := map.get_playable_area()
+	var trial := {
+		"x": x,
+		"y": y,
+		"width": area_width,
+		"height": area_height,
+	}
+	# Preview clamp without mutating yet.
+	var max_w := float(map.width)
+	var max_l := float(map.length)
+	var w := clampf(float(trial["width"]), 1.0, max_w)
+	var h := clampf(float(trial["height"]), 1.0, max_l)
+	var nx := clampf(float(trial["x"]), 0.0, max_w - w)
+	var ny := clampf(float(trial["y"]), 0.0, max_l - h)
+	if (
+		is_equal_approx(before["x"], nx)
+		and is_equal_approx(before["y"], ny)
+		and is_equal_approx(before["width"], w)
+		and is_equal_approx(before["height"], h)
+	):
+		return
+	var owned := begin_stroke("Playable area")
+	map.set_playable_area(nx, ny, w, h)
+	_stroke_touched_meta = true
+	mark_dirty()
+	map_changed.emit()
+	if owned:
+		end_stroke()
+
+
+func reset_playable_to_full() -> void:
+	var before := map.get_playable_area()
+	if (
+		is_equal_approx(before["x"], 0.0)
+		and is_equal_approx(before["y"], 0.0)
+		and is_equal_approx(before["width"], float(map.width))
+		and is_equal_approx(before["height"], float(map.length))
+	):
+		return
+	var owned := begin_stroke("Playable area full")
+	map.reset_playable_to_full()
+	_stroke_touched_meta = true
+	mark_dirty()
+	map_changed.emit()
+	if owned:
+		end_stroke()
+
+
+func set_fade_distance(value: float) -> void:
+	var clamped := maxf(value, 0.0)
+	if is_equal_approx(map.fade_distance, clamped):
+		return
+	var owned := begin_stroke("Fade distance")
+	map.fade_distance = clamped
+	_stroke_touched_meta = true
+	mark_dirty()
+	map_changed.emit()
+	if owned:
+		end_stroke()
+
+
+func set_fade_start_distance(value: float) -> void:
+	var clamped := maxf(value, 0.0)
+	if is_equal_approx(map.fade_start_distance, clamped):
+		return
+	var owned := begin_stroke("Fade start")
+	map.fade_start_distance = clamped
+	_stroke_touched_meta = true
+	mark_dirty()
+	map_changed.emit()
+	if owned:
+		end_stroke()
+
+
 func touch_meta_for_stroke() -> void:
 	if _stroke_open:
 		_stroke_touched_meta = true
@@ -303,6 +388,66 @@ func shape_points_needed(tool: Tool = active_tool) -> int:
 
 func set_ramp_angle_deg(value: float) -> void:
 	ramp_angle_deg = clampf(value, 0.5, 80.0)
+	# Keep a finished ramp: angle + height delta define horizontal length.
+	var dh := absf(set_height_world - ramp_ref_start_h)
+	var tan_a := tan(deg_to_rad(ramp_angle_deg))
+	if tan_a > 0.0001 and dh > 0.001:
+		ramp_length_m = clampf(dh / tan_a, 2.0, 512.0)
+	_notify_ramp_preview()
+
+
+func set_ramp_length_m(value: float) -> void:
+	ramp_length_m = clampf(value, 2.0, 512.0)
+	var dh := absf(set_height_world - ramp_ref_start_h)
+	if ramp_length_m > 0.001 and dh > 0.001:
+		ramp_angle_deg = clampf(rad_to_deg(atan(dh / ramp_length_m)), 0.5, 80.0)
+	_notify_ramp_preview()
+
+
+func set_ramp_end_height(world_h: float) -> void:
+	set_height_world = clampf(world_h, 0.0, float(map.height))
+	var dh := absf(set_height_world - ramp_ref_start_h)
+	if ramp_length_m > 0.001 and dh > 0.001:
+		ramp_angle_deg = clampf(rad_to_deg(atan(dh / ramp_length_m)), 0.5, 80.0)
+	elif ramp_angle_deg > 0.001 and dh > 0.001:
+		var tan_a := tan(deg_to_rad(ramp_angle_deg))
+		if tan_a > 0.0001:
+			ramp_length_m = clampf(dh / tan_a, 2.0, 512.0)
+	_notify_ramp_preview()
+
+
+func update_ramp_ref_start(world_h: float) -> void:
+	ramp_ref_start_h = world_h
+
+
+func set_ramp_aim_dir(dir: Vector3, mark_manual: bool = false) -> void:
+	var flat := Vector3(dir.x, 0.0, dir.z)
+	if flat.length() < 0.001:
+		return
+	var next := flat.normalized()
+	var dir_changed := not ramp_aim_dir.is_equal_approx(next)
+	var manual_changed := mark_manual and not ramp_aim_manual
+	if not dir_changed and not manual_changed:
+		return
+	ramp_aim_dir = next
+	if mark_manual:
+		ramp_aim_manual = true
+	_notify_ramp_preview()
+
+
+func rotate_ramp_aim_deg(yaw_deg: float) -> void:
+	ramp_aim_dir = ramp_aim_dir.rotated(Vector3.UP, deg_to_rad(yaw_deg)).normalized()
+	ramp_aim_manual = true
+	_notify_ramp_preview()
+
+
+func _notify_ramp_preview() -> void:
+	if active_tool == Tool.SHAPE_RAMP:
+		shape_draft_changed.emit()
+
+
+func set_shape_height_mode(mode: int) -> void:
+	shape_height_mode = clampi(mode, TerrainShapes.HeightMode.SET, TerrainShapes.HeightMode.LOWER)
 
 
 func set_pathing_max_angle_deg(value: float) -> void:
@@ -331,6 +476,13 @@ func update_shape_cursor(world_pos: Vector3, valid: bool) -> void:
 	shape_draft_has_cursor = valid
 	if valid:
 		shape_draft_cursor = world_pos
+		# Sync ramp aim from drag direction without a second notify cycle.
+		if active_tool == Tool.SHAPE_RAMP and shape_draft_active and not shape_draft_points.is_empty():
+			var origin: Vector3 = shape_draft_points[0]
+			var flat := Vector3(world_pos.x - origin.x, 0.0, world_pos.z - origin.z)
+			if flat.length() > 0.001:
+				ramp_aim_dir = flat.normalized()
+				ramp_aim_manual = true
 	shape_draft_changed.emit()
 
 
@@ -339,6 +491,8 @@ func begin_shape_draft(world_pos: Vector3) -> void:
 	shape_draft_points = [world_pos]
 	shape_draft_cursor = world_pos
 	shape_draft_has_cursor = true
+	if active_tool == Tool.SHAPE_RAMP:
+		update_ramp_ref_start(sample_world_height(world_pos))
 	shape_draft_changed.emit()
 
 
@@ -386,19 +540,31 @@ func commit_shape_draft() -> void:
 
 	var owned := begin_stroke(_shape_stroke_label(active_tool))
 	var dirty := Rect2i()
+	var hmode := shape_height_mode
 	match active_tool:
 		Tool.SHAPE_LINE:
-			dirty = TerrainShapes.apply_line(self, pts[0], pts[1], brush_radius, set_height_world)
+			dirty = TerrainShapes.apply_line(self, pts[0], pts[1], brush_radius, set_height_world, hmode)
 		Tool.SHAPE_CIRCLE:
 			var radius := Vector2(pts[1].x - pts[0].x, pts[1].z - pts[0].z).length()
-			dirty = TerrainShapes.apply_circle(self, pts[0], radius, set_height_world)
+			dirty = TerrainShapes.apply_circle(self, pts[0], radius, set_height_world, hmode)
 		Tool.SHAPE_ARC:
-			dirty = TerrainShapes.apply_arc(self, pts[0], pts[1], pts[2], brush_radius, set_height_world)
+			dirty = TerrainShapes.apply_arc(self, pts[0], pts[1], pts[2], brush_radius, set_height_world, hmode)
 		Tool.SHAPE_PLATEAU:
-			dirty = TerrainShapes.apply_plateau(self, pts[0], pts[1], set_height_world)
+			dirty = TerrainShapes.apply_plateau(self, pts[0], pts[1], set_height_world, hmode)
 		Tool.SHAPE_RAMP:
+			# Click-to-place: if the cursor barely moved, stamp along the current aim.
+			var ramp_aim: Vector3 = pts[1]
+			var ramp_flat := Vector3(ramp_aim.x - pts[0].x, 0.0, ramp_aim.z - pts[0].z)
+			if ramp_flat.length() < 0.001:
+				ramp_aim = pts[0] + ramp_aim_dir
 			dirty = TerrainShapes.apply_ramp(
-				self, pts[0], pts[1], brush_radius, ramp_angle_deg, set_height_world
+				self,
+				pts[0],
+				ramp_aim,
+				brush_radius,
+				ramp_length_m,
+				ramp_angle_deg,
+				set_height_world
 			)
 	clear_shape_draft()
 	if dirty.size.x > 0 and dirty.size.y > 0:
@@ -1300,6 +1466,9 @@ func _capture_meta_snapshot() -> Dictionary:
 		"terrain_preset_id": terrain_preset_id,
 		"stratum_layers": map.stratum_layers.duplicate(true),
 		"skybox": map.skybox.duplicate(true),
+		"playable_area": map.get_playable_area(),
+		"fade_distance": map.fade_distance,
+		"fade_start_distance": map.fade_start_distance,
 	}
 
 
@@ -1373,7 +1542,7 @@ func _apply_history_entry(entry: Dictionary, to_before: bool) -> void:
 				continue
 			heights[idx] = values[i]
 			var x := idx % res
-			var y := int(idx / res)
+			var y := int(idx / float(res))
 			var cell := Rect2i(x, y, 1, 1)
 			height_dirty = cell if not has_height_dirty else height_dirty.merge(cell)
 			has_height_dirty = true
@@ -1427,6 +1596,16 @@ func _apply_history_entry(entry: Dictionary, to_before: bool) -> void:
 		terrain_preset_id = str(meta.get("terrain_preset_id", terrain_preset_id))
 		map.stratum_layers = (meta.get("stratum_layers", map.stratum_layers) as Array).duplicate(true)
 		map.skybox = (meta.get("skybox", map.skybox) as Dictionary).duplicate(true)
+		if meta.has("playable_area"):
+			var pa: Dictionary = meta["playable_area"]
+			map.set_playable_area(
+				float(pa.get("x", 0.0)),
+				float(pa.get("y", 0.0)),
+				float(pa.get("width", float(map.width))),
+				float(pa.get("height", float(map.length)))
+			)
+		map.fade_distance = float(meta.get("fade_distance", map.fade_distance))
+		map.fade_start_distance = float(meta.get("fade_start_distance", map.fade_start_distance))
 		map.ensure_playable_materials()
 		materials_changed.emit()
 		map_changed.emit()

@@ -24,8 +24,16 @@ var _water_albedo: Texture2D
 var _water_normal: Texture2D
 var _water_tex_loaded: bool = false
 var _shape_preview: MeshInstance3D
+var _ramp_preview_fill: MeshInstance3D
 var _pathing_overlay_mesh: MeshInstance3D
 var _pathing_path_mesh: MeshInstance3D
+var _shape_line_mat: StandardMaterial3D
+var _ramp_fill_mat: StandardMaterial3D
+var _ramp_hover_pos: Vector3 = Vector3.ZERO
+var _ramp_hover_valid: bool = false
+var _playable_border: MeshInstance3D
+var _playable_fill_mat: StandardMaterial3D
+var _playable_line_mat: StandardMaterial3D
 
 
 func _ready() -> void:
@@ -53,8 +61,11 @@ func _on_tool_changed() -> void:
 		EditorState.end_stroke()
 	_painting = false
 	_shaping = false
+	EditorState.ramp_aim_manual = false
 	if EditorState.active_tool != EditorState.Tool.MEASURE_HEIGHT:
 		EditorState.set_live_measure(Vector3.ZERO, false)
+	if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP:
+		_update_ramp_aim_from_camera()
 	_sync_measure_pin()
 	_rebuild_shape_preview()
 	_rebuild_pathing_visuals()
@@ -77,6 +88,8 @@ func _process(delta: float) -> void:
 		_hide_mirror_rings()
 		if _shape_preview:
 			_shape_preview.visible = false
+		if _ramp_preview_fill:
+			_ramp_preview_fill.visible = false
 		if _painting:
 			EditorState.end_stroke()
 			_painting = false
@@ -89,6 +102,9 @@ func _process(delta: float) -> void:
 			EditorState.set_live_measure(Vector3.ZERO, false)
 		if EditorState.is_shape_tool():
 			EditorState.update_shape_cursor(Vector3.ZERO, false)
+		if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP and not EditorState.shape_draft_active:
+			_ramp_hover_valid = false
+			_rebuild_shape_preview()
 		return
 
 	var hit := _raycast_terrain()
@@ -102,6 +118,9 @@ func _process(delta: float) -> void:
 				EditorState.set_live_measure(Vector3.ZERO, false)
 			if EditorState.is_shape_tool():
 				EditorState.update_shape_cursor(Vector3.ZERO, false)
+			if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP and not EditorState.shape_draft_active:
+				_ramp_hover_valid = false
+				_rebuild_shape_preview()
 		return
 
 	_last_hit = hit.position
@@ -127,6 +146,14 @@ func _process(delta: float) -> void:
 		_place_brush_visual(brush_ring, hit.position, preview_r, maxf(preview_r * 0.05, 0.6))
 		_hide_mirror_rings()
 		EditorState.update_shape_cursor(hit.position, true)
+		if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP:
+			_ramp_hover_pos = hit.position
+			_ramp_hover_valid = true
+			if not EditorState.shape_draft_active:
+				EditorState.update_ramp_ref_start(EditorState.sample_world_height(hit.position))
+				if not EditorState.ramp_aim_manual:
+					_update_ramp_aim_from_camera()
+			_rebuild_shape_preview()
 	elif pathing:
 		_apply_measure_probe_style()
 		_place_brush_visual(brush_ring, hit.position, 2.5, 0.8)
@@ -195,8 +222,15 @@ func _input(event: InputEvent) -> void:
 		_last_hit = hit.position
 		_has_last_hit = true
 
-		if mb.shift_pressed and EditorState.active_tool == EditorState.Tool.SET_HEIGHT:
-			EditorState.set_height_world = EditorState.sample_world_height(hit.position)
+		if mb.shift_pressed and (
+			EditorState.active_tool == EditorState.Tool.SET_HEIGHT
+			or EditorState.is_shape_tool()
+		):
+			var sampled := EditorState.sample_world_height(hit.position)
+			if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP:
+				EditorState.set_ramp_end_height(sampled)
+			else:
+				EditorState.set_height_world = sampled
 			var ui := get_node_or_null("../UI")
 			if ui != null and ui.has_method("sync_set_height_from_state"):
 				ui.sync_set_height_from_state()
@@ -528,16 +562,73 @@ func _update_playable_area() -> void:
 	var y := float(area.get("y", 0.0))
 	var w := float(area.get("width", EditorState.map.width))
 	var h := float(area.get("height", EditorState.map.length))
+	var map_h := float(EditorState.map.height)
+	var post_h := maxf(map_h * 0.08, 4.0)
+
+	if _playable_fill_mat == null:
+		_playable_fill_mat = StandardMaterial3D.new()
+		_playable_fill_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_playable_fill_mat.albedo_color = Color(0.15, 0.75, 1.0, 0.1)
+		_playable_fill_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_playable_fill_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_playable_fill_mat.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
+	if _playable_line_mat == null:
+		_playable_line_mat = StandardMaterial3D.new()
+		_playable_line_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_playable_line_mat.albedo_color = Color(0.25, 0.9, 1.0, 0.95)
+		_playable_line_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_playable_line_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_playable_line_mat.no_depth_test = true
+
 	var box := BoxMesh.new()
-	box.size = Vector3(w, 0.4, h)
+	box.size = Vector3(w, 0.35, h)
 	playable_area.mesh = box
-	playable_area.position = Vector3(x + w * 0.5, 0.2, y + h * 0.5)
-	var mat := StandardMaterial3D.new()
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.albedo_color = Color(0.2, 0.7, 1.0, 0.12)
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	playable_area.material_override = mat
+	playable_area.position = Vector3(x + w * 0.5, 0.18, y + h * 0.5)
+	playable_area.material_override = _playable_fill_mat
+	playable_area.visible = true
+
+	if _playable_border == null:
+		_playable_border = MeshInstance3D.new()
+		_playable_border.name = "PlayableBorder"
+		add_child(_playable_border)
+	var im := ImmediateMesh.new()
+	im.surface_begin(Mesh.PRIMITIVE_LINES, _playable_line_mat)
+	var y0 := 0.35
+	var y1 := post_h
+	var c00 := Vector3(x, y0, y)
+	var c10 := Vector3(x + w, y0, y)
+	var c11 := Vector3(x + w, y0, y + h)
+	var c01 := Vector3(x, y0, y + h)
+	# Ground rectangle
+	im.surface_add_vertex(c00)
+	im.surface_add_vertex(c10)
+	im.surface_add_vertex(c10)
+	im.surface_add_vertex(c11)
+	im.surface_add_vertex(c11)
+	im.surface_add_vertex(c01)
+	im.surface_add_vertex(c01)
+	im.surface_add_vertex(c00)
+	# Corner posts so the area stays readable over terrain
+	for corner in [c00, c10, c11, c01]:
+		im.surface_add_vertex(corner)
+		im.surface_add_vertex(corner + Vector3(0.0, y1 - y0, 0.0))
+	# Top rim connecting posts
+	var t00 := c00 + Vector3(0.0, y1 - y0, 0.0)
+	var t10 := c10 + Vector3(0.0, y1 - y0, 0.0)
+	var t11 := c11 + Vector3(0.0, y1 - y0, 0.0)
+	var t01 := c01 + Vector3(0.0, y1 - y0, 0.0)
+	im.surface_add_vertex(t00)
+	im.surface_add_vertex(t10)
+	im.surface_add_vertex(t10)
+	im.surface_add_vertex(t11)
+	im.surface_add_vertex(t11)
+	im.surface_add_vertex(t01)
+	im.surface_add_vertex(t01)
+	im.surface_add_vertex(t00)
+	im.surface_end()
+	_playable_border.mesh = im
+	_playable_border.position = Vector3.ZERO
+	_playable_border.visible = true
 
 
 func _update_water() -> void:
@@ -669,18 +760,34 @@ func _restick_markers() -> void:
 
 
 func _make_shape_preview() -> void:
+	_shape_line_mat = StandardMaterial3D.new()
+	_shape_line_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_shape_line_mat.albedo_color = Color(1.0, 0.85, 0.2, 0.95)
+	_shape_line_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	_shape_line_mat.no_depth_test = true
+	_shape_line_mat.render_priority = 25
+	_shape_line_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+
+	_ramp_fill_mat = StandardMaterial3D.new()
+	_ramp_fill_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_ramp_fill_mat.albedo_color = Color(1.0, 0.78, 0.2, 0.35)
+	_ramp_fill_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	_ramp_fill_mat.no_depth_test = true
+	_ramp_fill_mat.render_priority = 24
+	_ramp_fill_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+
 	_shape_preview = MeshInstance3D.new()
 	_shape_preview.name = "ShapePreview"
 	_shape_preview.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var mat := StandardMaterial3D.new()
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.albedo_color = Color(1.0, 0.85, 0.2, 0.95)
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.no_depth_test = true
-	mat.render_priority = 25
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	_shape_preview.material_override = mat
+	_shape_preview.material_override = _shape_line_mat
 	add_child(_shape_preview)
+
+	_ramp_preview_fill = MeshInstance3D.new()
+	_ramp_preview_fill.name = "RampPreviewFill"
+	_ramp_preview_fill.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_ramp_preview_fill.material_override = _ramp_fill_mat
+	_ramp_preview_fill.visible = false
+	add_child(_ramp_preview_fill)
 
 
 func _make_pathing_visuals() -> void:
@@ -705,7 +812,42 @@ func _make_pathing_visuals() -> void:
 func _rebuild_shape_preview() -> void:
 	if _shape_preview == null:
 		return
-	if EditorState.is_flat_view() or not EditorState.is_shape_tool() or not EditorState.shape_draft_active:
+	if _ramp_preview_fill:
+		_ramp_preview_fill.visible = false
+	if EditorState.is_flat_view() or not EditorState.is_shape_tool():
+		_shape_preview.visible = false
+		_ramp_hover_valid = false
+		return
+
+	# Ramp: always show finished triangle at cursor (no click required).
+	# Do not call set_ramp_aim_dir here — it emits shape_draft_changed which
+	# reconnects to this rebuild and caused infinite recursion / stack overflow.
+	if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP:
+		var start := Vector3.ZERO
+		var aim := Vector3.ZERO
+		if EditorState.shape_draft_active and not EditorState.shape_draft_points.is_empty():
+			start = EditorState.shape_draft_points[0]
+			if EditorState.shape_draft_has_cursor:
+				aim = EditorState.shape_draft_cursor
+			elif EditorState.shape_draft_points.size() >= 2:
+				aim = EditorState.shape_draft_points[1]
+			else:
+				aim = start + EditorState.ramp_aim_dir
+		elif _ramp_hover_valid:
+			start = _ramp_hover_pos
+			aim = start + EditorState.ramp_aim_dir
+		else:
+			_shape_preview.visible = false
+			return
+		var im_ramp := ImmediateMesh.new()
+		im_ramp.surface_begin(Mesh.PRIMITIVE_LINES, _shape_line_mat)
+		_im_ramp_triangle(im_ramp, start, aim)
+		im_ramp.surface_end()
+		_shape_preview.mesh = im_ramp
+		_shape_preview.visible = true
+		return
+
+	if not EditorState.shape_draft_active:
 		_shape_preview.visible = false
 		return
 	var pts: Array[Vector3] = EditorState.shape_draft_points.duplicate()
@@ -716,22 +858,12 @@ func _rebuild_shape_preview() -> void:
 		return
 
 	var im := ImmediateMesh.new()
-	var mat := _shape_preview.material_override as StandardMaterial3D
-	im.surface_begin(Mesh.PRIMITIVE_LINES, mat)
+	im.surface_begin(Mesh.PRIMITIVE_LINES, _shape_line_mat)
 
 	match EditorState.active_tool:
-		EditorState.Tool.SHAPE_LINE, EditorState.Tool.SHAPE_RAMP:
+		EditorState.Tool.SHAPE_LINE:
 			_im_line(im, pts[0], pts[1])
 			_im_width_guides(im, pts[0], pts[1], EditorState.brush_radius)
-			if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP:
-				var start_h := EditorState.sample_world_height(pts[0])
-				var need := TerrainShapes.ramp_preview_length(start_h, EditorState.set_height_world, EditorState.ramp_angle_deg)
-				var dir := Vector3(pts[1].x - pts[0].x, 0.0, pts[1].z - pts[0].z)
-				if dir.length() > 0.001:
-					dir = dir.normalized()
-					var mark := pts[0] + dir * need
-					mark.y = EditorState.sample_world_height(mark) + 0.4
-					_im_cross(im, mark, 1.5)
 		EditorState.Tool.SHAPE_CIRCLE:
 			_im_circle(im, pts[0], Vector2(pts[1].x - pts[0].x, pts[1].z - pts[0].z).length())
 		EditorState.Tool.SHAPE_PLATEAU:
@@ -742,10 +874,95 @@ func _rebuild_shape_preview() -> void:
 			else:
 				_im_line(im, pts[0], pts[1])
 				_im_circle(im, pts[0], Vector2(pts[1].x - pts[0].x, pts[1].z - pts[0].z).length())
+		_:
+			pass
 
 	im.surface_end()
 	_shape_preview.mesh = im
 	_shape_preview.visible = true
+
+
+func _update_ramp_aim_from_camera() -> void:
+	if camera == null:
+		return
+	var fwd := -camera.global_transform.basis.z
+	fwd.y = 0.0
+	if fwd.length() < 0.001:
+		fwd = Vector3(0.0, 0.0, 1.0)
+	EditorState.set_ramp_aim_dir(fwd)
+
+
+## Full ramp preview: right-triangle side profiles + sloped deck (wire + fill).
+func _im_ramp_triangle(im: ImmediateMesh, start: Vector3, aim: Vector3) -> void:
+	var flat := Vector3(aim.x - start.x, 0.0, aim.z - start.z)
+	if flat.length() < 0.001:
+		_im_line(im, start, aim)
+		return
+	var dir := flat.normalized()
+	var length := maxf(EditorState.ramp_length_m, 0.5)
+	var half_w := maxf(EditorState.brush_radius * 0.5, 0.25)
+	var side := Vector3(-dir.z, 0.0, dir.x) * half_w
+	var start_h := EditorState.sample_world_height(start)
+	var end_h := EditorState.set_height_world
+	var end_xz := start + dir * length
+
+	# Corner positions of the finished ramp wedge (two parallel right triangles).
+	# Start low (A), end low (B), end high (C) — hypotenuse A→C is the deck.
+	var a_l := Vector3(start.x, start_h, start.z) + side
+	var a_r := Vector3(start.x, start_h, start.z) - side
+	var b_l := Vector3(end_xz.x, start_h, end_xz.z) + side
+	var b_r := Vector3(end_xz.x, start_h, end_xz.z) - side
+	var c_l := Vector3(end_xz.x, end_h, end_xz.z) + side
+	var c_r := Vector3(end_xz.x, end_h, end_xz.z) - side
+	# Lift slightly so lines sit above terrain / don't z-fight.
+	var lift := 0.08
+	a_l.y += lift
+	a_r.y += lift
+	b_l.y += lift
+	b_r.y += lift
+	c_l.y += lift
+	c_r.y += lift
+
+	# Left / right side triangles (wire).
+	_im_seg(im, a_l, b_l)
+	_im_seg(im, b_l, c_l)
+	_im_seg(im, c_l, a_l)
+	_im_seg(im, a_r, b_r)
+	_im_seg(im, b_r, c_r)
+	_im_seg(im, c_r, a_r)
+	# Deck edges + base + end face.
+	_im_seg(im, a_l, a_r)
+	_im_seg(im, b_l, b_r)
+	_im_seg(im, c_l, c_r)
+	_im_seg(im, a_l, c_l)
+	_im_seg(im, a_r, c_r)
+
+	# Translucent fill: both side triangles + sloped deck.
+	if _ramp_preview_fill:
+		var fill := ImmediateMesh.new()
+		fill.surface_begin(Mesh.PRIMITIVE_TRIANGLES, _ramp_fill_mat)
+		_im_tri(fill, a_l, b_l, c_l)
+		_im_tri(fill, a_l, c_l, b_l)
+		_im_tri(fill, a_r, b_r, c_r)
+		_im_tri(fill, a_r, c_r, b_r)
+		_im_tri(fill, a_l, a_r, c_r)
+		_im_tri(fill, a_l, c_r, c_l)
+		_im_tri(fill, b_l, c_l, c_r)
+		_im_tri(fill, b_l, c_r, b_r)
+		fill.surface_end()
+		_ramp_preview_fill.mesh = fill
+		_ramp_preview_fill.visible = true
+
+
+func _im_seg(im: ImmediateMesh, a: Vector3, b: Vector3) -> void:
+	im.surface_add_vertex(a)
+	im.surface_add_vertex(b)
+
+
+func _im_tri(im: ImmediateMesh, a: Vector3, b: Vector3, c: Vector3) -> void:
+	im.surface_add_vertex(a)
+	im.surface_add_vertex(b)
+	im.surface_add_vertex(c)
 
 
 func _rebuild_pathing_visuals() -> void:

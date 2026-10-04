@@ -138,8 +138,15 @@ func _gui_input(event: InputEvent) -> void:
 		if not _uv_valid(_cursor_uv):
 			return
 		var world := _uv_to_world(_cursor_uv)
-		if mb.shift_pressed and EditorState.active_tool == EditorState.Tool.SET_HEIGHT:
-			EditorState.set_height_world = EditorState.sample_world_height(world)
+		if mb.shift_pressed and (
+			EditorState.active_tool == EditorState.Tool.SET_HEIGHT
+			or EditorState.is_shape_tool()
+		):
+			var sampled := EditorState.sample_world_height(world)
+			if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP:
+				EditorState.set_ramp_end_height(sampled)
+			else:
+				EditorState.set_height_world = sampled
 			var canvas := find_parent_canvas()
 			if canvas != null and canvas.has_method("sync_set_height_from_state"):
 				canvas.sync_set_height_from_state()
@@ -219,7 +226,8 @@ func _draw() -> void:
 		rect.position + Vector2(ax * rect.size.x, ay * rect.size.y),
 		Vector2(aw * rect.size.x, ah * rect.size.y)
 	)
-	draw_rect(area_rect, Color(0.25, 0.7, 1.0, 0.12), false, 2.0)
+	draw_rect(area_rect, Color(0.2, 0.85, 1.0, 0.12), true)
+	draw_rect(area_rect, Color(0.25, 0.95, 1.0, 0.95), false, 2.5)
 
 	_draw_markers(SanMapData.MARKER_SPAWN, Color(0.25, 0.95, 0.4), rect)
 	_draw_markers(SanMapData.MARKER_ALLOYS, Color(1.0, 0.78, 0.2), rect)
@@ -293,7 +301,29 @@ func _draw_pathing(rect: Rect2) -> void:
 
 
 func _draw_shape_draft(rect: Rect2) -> void:
-	if not EditorState.is_shape_tool() or not EditorState.shape_draft_active:
+	if not EditorState.is_shape_tool():
+		return
+	# Ramp: preview without requiring a click (cursor = start).
+	if EditorState.active_tool == EditorState.Tool.SHAPE_RAMP:
+		var start := Vector3.ZERO
+		var aim := Vector3.ZERO
+		if EditorState.shape_draft_active and not EditorState.shape_draft_points.is_empty():
+			start = EditorState.shape_draft_points[0]
+			if EditorState.shape_draft_has_cursor:
+				aim = EditorState.shape_draft_cursor
+			elif EditorState.shape_draft_points.size() >= 2:
+				aim = EditorState.shape_draft_points[1]
+			else:
+				aim = start + EditorState.ramp_aim_dir
+		elif _uv_valid(_cursor_uv):
+			start = _uv_to_world(_cursor_uv)
+			aim = start + EditorState.ramp_aim_dir
+		else:
+			return
+		_draw_ramp_preview_2d(rect, start, aim)
+		return
+
+	if not EditorState.shape_draft_active:
 		return
 	var pts: Array[Vector3] = EditorState.shape_draft_points.duplicate()
 	if EditorState.shape_draft_has_cursor:
@@ -302,7 +332,7 @@ func _draw_shape_draft(rect: Rect2) -> void:
 		return
 	var col := Color(1.0, 0.85, 0.25, 0.95)
 	match EditorState.active_tool:
-		EditorState.Tool.SHAPE_LINE, EditorState.Tool.SHAPE_RAMP:
+		EditorState.Tool.SHAPE_LINE:
 			draw_line(_world_to_draw(rect, pts[0]), _world_to_draw(rect, pts[1]), col, 2.0)
 		EditorState.Tool.SHAPE_CIRCLE:
 			var c := _world_to_draw(rect, pts[0])
@@ -333,6 +363,41 @@ func _draw_shape_draft(rect: Rect2) -> void:
 						draw_line(_world_to_draw(rect, q0), _world_to_draw(rect, q1), col, 2.0)
 			else:
 				draw_line(_world_to_draw(rect, pts[0]), _world_to_draw(rect, pts[1]), col, 2.0)
+
+
+func _draw_ramp_preview_2d(rect: Rect2, start: Vector3, aim: Vector3) -> void:
+	var col := Color(1.0, 0.85, 0.25, 0.95)
+	var dir := Vector3(aim.x - start.x, 0.0, aim.z - start.z)
+	if dir.length() < 0.001:
+		dir = Vector3(0, 0, 1)
+	else:
+		dir = dir.normalized()
+	var end_pt := start + dir * EditorState.ramp_length_m
+	var half := maxf(EditorState.brush_radius * 0.5, 0.5)
+	var side := Vector3(-dir.z, 0.0, dir.x) * half
+	var a := _world_to_draw(rect, start)
+	var b := _world_to_draw(rect, end_pt)
+	var a_l := _world_to_draw(rect, start + side)
+	var a_r := _world_to_draw(rect, start - side)
+	var b_l := _world_to_draw(rect, end_pt + side)
+	var b_r := _world_to_draw(rect, end_pt - side)
+	draw_line(a_l, b_l, col, 2.0)
+	draw_line(a_r, b_r, col, 2.0)
+	draw_line(a_l, a_r, col, 2.0)
+	draw_line(b_l, b_r, col, 2.0)
+	draw_line(a, b, col, 2.0)
+	var start_h := EditorState.sample_world_height(start)
+	var end_h := EditorState.set_height_world
+	var map_h := maxf(float(EditorState.map.height), 1.0)
+	var rise_px := clampf(absf(end_h - start_h) / map_h, 0.0, 1.0) * minf(rect.size.x, rect.size.y) * 0.12
+	var ab := b - a
+	if ab.length() > 1.0:
+		var n2 := Vector2(-ab.y, ab.x).normalized()
+		var tip := b + n2 * rise_px * signf(end_h - start_h)
+		draw_colored_polygon(PackedVector2Array([a, b, tip]), Color(1.0, 0.75, 0.2, 0.28))
+		draw_line(a, b, Color(1.0, 0.55, 0.15, 0.95), 1.5)
+		draw_line(b, tip, Color(1.0, 0.55, 0.15, 0.95), 1.5)
+		draw_line(tip, a, Color(1.0, 0.55, 0.15, 0.95), 2.0)
 
 
 func _draw_measure_marker(rect: Rect2, world: Vector3, height: float, pinned: bool) -> void:

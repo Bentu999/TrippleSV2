@@ -1,6 +1,21 @@
 class_name TerrainShapes
 extends RefCounted
 ## Pure heightmap geometry helpers for line / circle / arc / plateau / ramp / pathing.
+##
+## Height modes (combine shapes with Zielhöhe):
+##   SET   – stamp absolute world height
+##   RAISE – raise existing terrain toward Zielhöhe (never lower)
+##   LOWER – lower existing terrain toward Zielhöhe (never raise)
+##
+## Line / arc / ramp stamp a flat corridor (driveable road cross-section),
+## not a soft circular brush.
+
+
+enum HeightMode {
+	SET,
+	RAISE,
+	LOWER,
+}
 
 
 static func world_cell_size(map: SanMapData) -> float:
@@ -12,30 +27,72 @@ static func target_norm(map: SanMapData, world_height: float) -> float:
 	return clampf(world_height / maxf(float(map.height), 0.001), 0.0, 1.0)
 
 
-static func apply_line(state: Node, a: Vector3, b: Vector3, width_m: float, world_height: float) -> Rect2i:
+static func combine_height(current: float, target: float, mode: int, strength: float = 1.0) -> float:
+	var s := clampf(strength, 0.0, 1.0)
+	match mode:
+		HeightMode.RAISE:
+			if current >= target:
+				return current
+			return lerpf(current, target, s)
+		HeightMode.LOWER:
+			if current <= target:
+				return current
+			return lerpf(current, target, s)
+		_:
+			return lerpf(current, target, s)
+
+
+static func apply_line(
+	state: Node,
+	a: Vector3,
+	b: Vector3,
+	width_m: float,
+	world_height: float,
+	height_mode: int = HeightMode.SET
+) -> Rect2i:
 	var target := target_norm(state.map, world_height)
-	return _stamp_polyline(state, [a, b], width_m, func(_t: float, _world: Vector3) -> float: return target)
+	return _stamp_corridor(
+		state,
+		[a, b],
+		width_m,
+		func(_t: float, _world: Vector3) -> float: return target,
+		height_mode,
+		0.85
+	)
 
 
-static func apply_circle(state: Node, center: Vector3, radius_m: float, world_height: float) -> Rect2i:
+static func apply_circle(
+	state: Node,
+	center: Vector3,
+	radius_m: float,
+	world_height: float,
+	height_mode: int = HeightMode.SET
+) -> Rect2i:
 	var map: SanMapData = state.map
 	var res: int = map.heightmap_resolution
 	var cell := world_cell_size(map)
 	var radius_cells := maxi(1, int(ceil(radius_m / maxf(cell, 0.001))))
-	var c := state.world_to_height_index(center) as Vector2i
+	var c: Vector2i = state.world_to_height_index(center)
 	var target := target_norm(map, world_height)
 	var radius_sq := float(radius_cells * radius_cells)
 	var dirty := Rect2i()
 	var has_dirty := false
 	for oy in range(-radius_cells, radius_cells + 1):
 		for ox in range(-radius_cells, radius_cells + 1):
-			if float(ox * ox + oy * oy) > radius_sq:
+			var dist_sq := float(ox * ox + oy * oy)
+			if dist_sq > radius_sq:
 				continue
 			var x := c.x + ox
 			var y := c.y + oy
 			if x < 0 or y < 0 or x >= res or y >= res:
 				continue
-			state.set_height(x, y, target)
+			# Soft outer rim (~15% of radius); interior is flat at target height.
+			var dist := sqrt(dist_sq)
+			var edge := 1.0
+			if radius_cells > 0:
+				edge = 1.0 - clampf((dist / float(radius_cells) - 0.85) / 0.15, 0.0, 1.0)
+			var cur: float = state.get_height(x, y)
+			state.set_height(x, y, combine_height(cur, target, height_mode, edge))
 			var cell_rect := Rect2i(x, y, 1, 1)
 			dirty = cell_rect if not has_dirty else dirty.merge(cell_rect)
 			has_dirty = true
@@ -48,11 +105,12 @@ static func apply_arc(
 	p1: Vector3,
 	p2: Vector3,
 	width_m: float,
-	world_height: float
+	world_height: float,
+	height_mode: int = HeightMode.SET
 ) -> Rect2i:
 	var circle := circumcircle_xz(p0, p1, p2)
 	if circle.is_empty():
-		return apply_line(state, p0, p2, width_m, world_height)
+		return apply_line(state, p0, p2, width_m, world_height, height_mode)
 	var center: Vector3 = circle.center
 	var radius: float = circle.radius
 	var a0 := atan2(p0.z - center.z, p0.x - center.x)
@@ -66,63 +124,72 @@ static func apply_arc(
 		var ang := a0 + sweep * t
 		points.append(Vector3(center.x + cos(ang) * radius, 0.0, center.z + sin(ang) * radius))
 	var target := target_norm(state.map, world_height)
-	return _stamp_polyline(state, points, width_m, func(_t: float, _world: Vector3) -> float: return target)
+	return _stamp_corridor(
+		state,
+		points,
+		width_m,
+		func(_t: float, _world: Vector3) -> float: return target,
+		height_mode,
+		0.85
+	)
 
 
-static func apply_plateau(state: Node, a: Vector3, b: Vector3, world_height: float) -> Rect2i:
+static func apply_plateau(
+	state: Node,
+	a: Vector3,
+	b: Vector3,
+	world_height: float,
+	height_mode: int = HeightMode.SET
+) -> Rect2i:
 	var map: SanMapData = state.map
 	var res: int = map.heightmap_resolution
-	var ia := state.world_to_height_index(a) as Vector2i
-	var ib := state.world_to_height_index(b) as Vector2i
+	var ia: Vector2i = state.world_to_height_index(a)
+	var ib: Vector2i = state.world_to_height_index(b)
 	var x0 := mini(ia.x, ib.x)
 	var y0 := mini(ia.y, ib.y)
 	var x1 := maxi(ia.x, ib.x)
 	var y1 := maxi(ia.y, ib.y)
 	var target := target_norm(map, world_height)
+	var dirty := Rect2i()
+	var has_dirty := false
 	for y in range(y0, y1 + 1):
 		for x in range(x0, x1 + 1):
 			if x < 0 or y < 0 or x >= res or y >= res:
 				continue
-			state.set_height(x, y, target)
-	if x1 < x0 or y1 < y0:
-		return Rect2i()
-	return Rect2i(x0, y0, x1 - x0 + 1, y1 - y0 + 1)
+			var cur: float = state.get_height(x, y)
+			state.set_height(x, y, combine_height(cur, target, height_mode, 1.0))
+			var cell_rect := Rect2i(x, y, 1, 1)
+			dirty = cell_rect if not has_dirty else dirty.merge(cell_rect)
+			has_dirty = true
+	return dirty if has_dirty else Rect2i()
 
 
-## Ramp from A toward B: starts at terrain height at A, ends at world_height,
-## rising/falling at the configured angle. Extra length beyond the required ramp
-## stays at the target height (plateau run-out).
+## Finished ramp: start at terrain under A, run exactly `length_m` in direction
+## A→B, linearly from start height to `end_world_height`. `angle_deg` is the
+## design slope (UI-linked with length/height); stamp uses length + end height.
+## Cross-section is a flat driveable corridor (width_m = Pinselradius).
 static func apply_ramp(
 	state: Node,
 	a: Vector3,
 	b: Vector3,
 	width_m: float,
-	angle_deg: float,
+	length_m: float,
+	_angle_deg: float,
 	end_world_height: float
 ) -> Rect2i:
 	var start_h: float = state.sample_world_height(a)
 	var end_h := end_world_height
 	var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
-	var dist := flat.length()
-	if dist < 0.001:
+	if flat.length() < 0.001:
 		return Rect2i()
-	var dir := flat / dist
-	var angle := clampf(angle_deg, 0.5, 80.0)
-	var tan_a := tan(deg_to_rad(angle))
-	var delta_h := end_h - start_h
-	var ramp_len := absf(delta_h) / maxf(tan_a, 0.0001)
-	var corridor_len := maxf(dist, ramp_len)
-	var end_pos := a + dir * corridor_len
+	var dir := flat.normalized()
+	var ramp_len := maxf(length_m, 0.5)
+	var end_pos := a + dir * ramp_len
 	var map_h := maxf(float(state.map.height), 0.001)
 	var height_fn := func(t: float, _world: Vector3) -> float:
-		var along := t * corridor_len
-		var world_h: float
-		if along <= ramp_len:
-			world_h = start_h + signf(delta_h) * along * tan_a
-		else:
-			world_h = end_h
+		var world_h := lerpf(start_h, end_h, clampf(t, 0.0, 1.0))
 		return clampf(world_h / map_h, 0.0, 1.0)
-	return _stamp_polyline(state, [a, end_pos], width_m, height_fn)
+	return _stamp_corridor(state, [a, end_pos], width_m, height_fn, HeightMode.SET, 1.0)
 
 
 static func slope_angle_deg_at(state: Node, x: int, y: int) -> float:
@@ -151,7 +218,6 @@ static func build_slope_overlay(state: Node, max_angle_deg: float) -> Image:
 			var ang := slope_angle_deg_at(state, x, y)
 			if ang <= limit:
 				continue
-			# Red intensity scales with how far above the limit we are.
 			var t := clampf((ang - limit) / maxf(90.0 - limit, 1.0), 0.15, 1.0)
 			img.set_pixel(x, y, Color(1.0, 0.15, 0.1, 0.25 + t * 0.55))
 	return img
@@ -172,8 +238,8 @@ static func edge_slope_deg(state: Node, ax: int, ay: int, bx: int, by: int) -> f
 
 static func find_walkable_path(state: Node, start: Vector3, goal: Vector3, max_angle_deg: float) -> Array[Vector3]:
 	var res: int = state.map.heightmap_resolution
-	var s := state.world_to_height_index(start) as Vector2i
-	var g := state.world_to_height_index(goal) as Vector2i
+	var s: Vector2i = state.world_to_height_index(start)
+	var g: Vector2i = state.world_to_height_index(goal)
 	var limit := clampf(max_angle_deg, 1.0, 89.0)
 	if s == g:
 		return [start, goal]
@@ -284,78 +350,121 @@ static func ramp_preview_length(start_h: float, end_h: float, angle_deg: float) 
 	return absf(end_h - start_h) / maxf(tan(deg_to_rad(angle)), 0.0001)
 
 
-static func _stamp_polyline(state: Node, points: Array, width_m: float, height_fn: Callable) -> Rect2i:
+## Stamp a flat road corridor along a polyline.
+## Cells within half_w * flat_ratio get full strength (driveable deck).
+## Outer shoulder soft-blends to surrounding terrain when flat_ratio < 1.
+static func _stamp_corridor(
+	state: Node,
+	points: Array,
+	width_m: float,
+	height_fn: Callable,
+	height_mode: int = HeightMode.SET,
+	flat_ratio: float = 0.85
+) -> Rect2i:
 	if points.size() < 2:
 		return Rect2i()
 	var map: SanMapData = state.map
 	var res: int = map.heightmap_resolution
 	var cell := world_cell_size(map)
 	var half_w := maxf(width_m * 0.5, cell * 0.5)
-	var radius_cells := maxi(1, int(ceil(half_w / maxf(cell, 0.001))))
+	var flat_half := half_w * clampf(flat_ratio, 0.5, 1.0)
+	var map_w := float(map.width)
+	var map_l := float(map.length)
+
 	var total_len := 0.0
 	var seg_lens: Array[float] = []
-	for i in range(points.size() - 1):
-		var p0: Vector3 = points[i]
-		var p1: Vector3 = points[i + 1]
-		var L := Vector2(p1.x - p0.x, p1.z - p0.z).length()
-		seg_lens.append(L)
-		total_len += L
+	var min_x := INF
+	var max_x := -INF
+	var min_z := INF
+	var max_z := -INF
+	for i in range(points.size()):
+		var p: Vector3 = points[i]
+		min_x = minf(min_x, p.x)
+		max_x = maxf(max_x, p.x)
+		min_z = minf(min_z, p.z)
+		max_z = maxf(max_z, p.z)
+		if i < points.size() - 1:
+			var p1: Vector3 = points[i + 1]
+			var L := Vector2(p1.x - p.x, p1.z - p.z).length()
+			seg_lens.append(L)
+			total_len += L
 	if total_len < 0.0001:
 		return Rect2i()
 
-	var touched := {}
+	min_x -= half_w
+	max_x += half_w
+	min_z -= half_w
+	max_z += half_w
+	var ix0 := clampi(int(floor(min_x / map_w * float(res - 1))), 0, res - 1)
+	var ix1 := clampi(int(ceil(max_x / map_w * float(res - 1))), 0, res - 1)
+	var iy0 := clampi(int(floor(min_z / map_l * float(res - 1))), 0, res - 1)
+	var iy1 := clampi(int(ceil(max_z / map_l * float(res - 1))), 0, res - 1)
+
 	var dirty := Rect2i()
 	var has_dirty := false
+	for y in range(iy0, iy1 + 1):
+		for x in range(ix0, ix1 + 1):
+			var wx := float(x) / float(res - 1) * map_w
+			var wz := float(y) / float(res - 1) * map_l
+			var closest := _closest_on_polyline(wx, wz, points, seg_lens, total_len)
+			var perp: float = closest.dist
+			if perp > half_w:
+				continue
+			var target_h := float(height_fn.call(closest.t, Vector3(wx, 0.0, wz)))
+			var strength := 1.0
+			if perp > flat_half and half_w > flat_half:
+				strength = 1.0 - clampf((perp - flat_half) / (half_w - flat_half), 0.0, 1.0)
+			if strength <= 0.001:
+				continue
+			var cur: float = state.get_height(x, y)
+			state.set_height(x, y, combine_height(cur, target_h, height_mode, strength))
+			var cell_rect := Rect2i(x, y, 1, 1)
+			dirty = cell_rect if not has_dirty else dirty.merge(cell_rect)
+			has_dirty = true
+	return dirty if has_dirty else Rect2i()
+
+
+static func _closest_on_polyline(
+	wx: float,
+	wz: float,
+	points: Array,
+	seg_lens: Array,
+	total_len: float
+) -> Dictionary:
+	var best_dist := INF
+	var best_t := 0.0
 	var walked := 0.0
 	for i in range(points.size() - 1):
 		var p0: Vector3 = points[i]
 		var p1: Vector3 = points[i + 1]
 		var seg: float = seg_lens[i]
-		var samples := maxi(2, int(ceil(seg / maxf(cell * 0.5, 0.1))))
-		for s in samples + 1:
-			var u := float(s) / float(samples)
-			var world := p0.lerp(p1, u)
-			var t := (walked + seg * u) / total_len
-			var center: Vector2i = state.world_to_height_index(world)
-			var h := float(height_fn.call(t, world))
-			for oy in range(-radius_cells, radius_cells + 1):
-				for ox in range(-radius_cells, radius_cells + 1):
-					var dist_m := sqrt(float(ox * ox + oy * oy)) * cell
-					if dist_m > half_w:
-						continue
-					var x := center.x + ox
-					var y := center.y + oy
-					if x < 0 or y < 0 or x >= res or y >= res:
-						continue
-					var key := x + y * res
-					if touched.has(key):
-						continue
-					touched[key] = true
-					# Soft edge so stamped shapes blend slightly.
-					var edge := 1.0 - clampf((dist_m / half_w - 0.7) / 0.3, 0.0, 1.0)
-					var cur: float = state.get_height(x, y)
-					state.set_height(x, y, lerpf(cur, h, edge))
-					var cell_rect := Rect2i(x, y, 1, 1)
-					dirty = cell_rect if not has_dirty else dirty.merge(cell_rect)
-					has_dirty = true
+		var dx := p1.x - p0.x
+		var dz := p1.z - p0.z
+		var len_sq := dx * dx + dz * dz
+		var u := 0.0
+		if len_sq > 0.0000001:
+			u = clampf(((wx - p0.x) * dx + (wz - p0.z) * dz) / len_sq, 0.0, 1.0)
+		var cx := p0.x + dx * u
+		var cz := p0.z + dz * u
+		var dist := Vector2(wx - cx, wz - cz).length()
+		if dist < best_dist:
+			best_dist = dist
+			best_t = (walked + seg * u) / total_len
 		walked += seg
-	return dirty if has_dirty else Rect2i()
+	return {"dist": best_dist, "t": best_t}
 
 
 static func arc_sweep_through(a0: float, a_mid: float, a2: float) -> float:
 	## Return signed sweep from a0 to a2 that passes through a_mid.
 	var to_mid := _delta_angle(a0, a_mid)
 	var to_end := _delta_angle(a0, a2)
-	# Prefer the direction that reaches mid before end.
 	if signf(to_mid) == signf(to_end) or is_zero_approx(to_mid):
 		if absf(to_end) < absf(to_mid):
-			# End is before mid on that side — take the long way.
 			if to_end >= 0.0:
 				to_end -= TAU
 			else:
 				to_end += TAU
 		return to_end
-	# Mid is on the other side from the short end — flip end the long way.
 	if to_end >= 0.0:
 		to_end -= TAU
 	else:
