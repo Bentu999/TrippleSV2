@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://sanmapeditorui01"]
+[gd_scene load_steps=10 format=3 uid="uid://sanmapeditorui01"]
 
 [ext_resource type="Script" path="res://scripts/ui/editor_ui.gd" id="1_ui"]
 [ext_resource type="Theme" path="res://resources/theme/editor_theme.tres" id="2_theme"]
 [ext_resource type="FontFile" path="res://resources/fonts/Syne.ttf" id="3_syne"]
 [ext_resource type="FontFile" path="res://resources/fonts/IBMPlexSans.ttf" id="4_plex"]
 [ext_resource type="Script" path="res://scripts/ui/map_flat_view.gd" id="5_flat"]
+[ext_resource type="Script" path="res://scripts/ui/scale_bar.gd" id="6_scalebar"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top"]
 content_margin_left = 18.0
@@ -199,6 +200,22 @@ custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 text = "Speichern unter"
 
+[node name="BtnUndo" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+disabled = true
+tooltip_text = "Rückgängig (Ctrl+Z)"
+text = "Undo"
+
+[node name="BtnRedo" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+disabled = true
+tooltip_text = "Wiederholen (Ctrl+Y)"
+text = "Redo"
+
 [node name="ToolRail" type="PanelContainer" parent="Root"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -206,15 +223,15 @@ anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 14.0
-offset_top = -188.0
+offset_top = -340.0
 offset_right = 86.0
-offset_bottom = 188.0
+offset_bottom = 340.0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rail")
 
 [node name="ToolCol" type="VBoxContainer" parent="Root/ToolRail"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
 [node name="ToolsCaption" type="Label" parent="Root/ToolRail/ToolCol"]
 layout_mode = 2
@@ -225,14 +242,14 @@ horizontal_alignment = 1
 
 [node name="BtnOrbit" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
 text = "Orbit"
 
 [node name="BtnRaise" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
@@ -240,48 +257,122 @@ text = "Raise"
 
 [node name="BtnLower" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
 text = "Lower"
 
 [node name="BtnSmooth" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
 text = "Smooth"
 
 [node name="BtnFlatten" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
+tooltip_text = "Höhe setzen"
 text = "Höhe"
+
+[node name="BtnMeasure" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+toggle_mode = true
+tooltip_text = "Höhe messen"
+text = "Messen"
 
 [node name="BtnPaint" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
 text = "Textur"
+
+[node name="RailSepShapes" type="HSeparator" parent="Root/ToolRail/ToolCol"]
+layout_mode = 2
+
+[node name="ShapesCaption" type="Label" parent="Root/ToolRail/ToolCol"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.66, 0.58, 1)
+theme_override_font_sizes/font_size = 10
+text = "FORMEN"
+horizontal_alignment = 1
+
+[node name="BtnLine" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+toggle_mode = true
+tooltip_text = "Gerade Linie auf Zielhöhe"
+text = "Linie"
+
+[node name="BtnCircle" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+toggle_mode = true
+tooltip_text = "Kreis-Plateau auf Zielhöhe"
+text = "Kreis"
+
+[node name="BtnArc" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+toggle_mode = true
+tooltip_text = "Kreisbogen (3 Punkte)"
+text = "Bogen"
+
+[node name="BtnPlateau" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+toggle_mode = true
+tooltip_text = "Rechteckiges Plateau"
+text = "Plateau"
+
+[node name="BtnRamp" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+toggle_mode = true
+tooltip_text = "Rampe mit einstellbarem Winkel"
+text = "Rampe"
+
+[node name="BtnPathing" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+toggle_mode = true
+tooltip_text = "Pathing-Prüfung nach Steigung"
+text = "Path"
 
 [node name="RailSep" type="HSeparator" parent="Root/ToolRail/ToolCol"]
 layout_mode = 2
 
 [node name="BtnSpawn" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
 text = "Spawn"
 
 [node name="BtnAlloys" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
 text = "Alloy"
+
+[node name="BtnProp" type="Button" parent="Root/ToolRail/ToolCol"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+toggle_mode = true
+text = "Prop"
 
 [node name="SideDock" type="PanelContainer" parent="Root"]
 unique_name_in_owner = true
@@ -339,7 +430,7 @@ columns = 2
 [node name="WLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
-text = "Width"
+text = "Width (m)"
 
 [node name="WidthSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
 unique_name_in_owner = true
@@ -353,7 +444,7 @@ value = 256.0
 [node name="LLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
-text = "Length"
+text = "Length (m)"
 
 [node name="LengthSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
 unique_name_in_owner = true
@@ -366,7 +457,7 @@ value = 256.0
 [node name="HLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
-text = "Height"
+text = "Height (m)"
 
 [node name="HeightSpin" type="SpinBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap/SizeGrid"]
 unique_name_in_owner = true
@@ -393,6 +484,19 @@ value = 257.0
 unique_name_in_owner = true
 layout_mode = 2
 text = "Neue Karte mit Größe erstellen"
+
+[node name="ScaleGuidesCheck" type="CheckBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Maßstab-Hilfen (Grid / 2 m)"
+
+[node name="ScaleHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMap"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.52, 1)
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+text = "1 Einheit = 1 m Spielwelt. Gelbes Grid, Kantenmaße, 2-m-Figur an der Playable-Ecke."
 
 [node name="Sep1" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 layout_mode = 2
@@ -431,7 +535,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
 theme_override_font_sizes/font_size = 11
 autowrap_mode = 3
-text = "Preset wechselt die 8 Stratum-Texturen. Tool „Textur“ malt die gewählte Schicht auf die Splat-Map."
+text = "Schicht 1–8 mit festen Namen (Boden A … Stein) — in jedem Biome gleich. Die Dateipfade wechseln mit dem Biome."
 
 [node name="SepTerrain" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 layout_mode = 2
@@ -454,7 +558,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Radius"
+text = "Radius (m)"
 
 [node name="BrushRadiusValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/RadiusRow"]
 unique_name_in_owner = true
@@ -500,13 +604,13 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Zielhöhe"
+text = "Zielhöhe (m)"
 
 [node name="SetHeightValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/SetHeightRow"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.82, 0.48, 1)
-text = "16.0"
+text = "16.0 m"
 
 [node name="SetHeightSlider" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
 unique_name_in_owner = true
@@ -520,7 +624,81 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
 theme_override_font_sizes/font_size = 11
 autowrap_mode = 3
-text = "Tool „Höhe“: auf Zielhöhe setzen. Shift+Klick: Höhe vom Terrain übernehmen."
+text = "Tool „Höhe“ / Formen: Zielhöhe. Shift+Klick: Höhe vom Terrain übernehmen. Pinselradius = Linien-/Rampenbreite."
+
+[node name="SepShapes" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+
+[node name="SectionShapes" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ShapesHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.78, 0.55, 1)
+theme_override_font_sizes/font_size = 13
+text = "Formen · Rampe · Pathing"
+
+[node name="RampAngleRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+layout_mode = 2
+
+[node name="RampAngleLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampAngleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Rampenwinkel"
+
+[node name="RampAngleValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampAngleRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.82, 0.48, 1)
+text = "15°"
+
+[node name="RampAngleSlider" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 60.0
+step = 0.5
+value = 15.0
+
+[node name="PathAngleRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+layout_mode = 2
+
+[node name="PathAngleLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/PathAngleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
+text = "Pathing max. Steigung"
+
+[node name="PathAngleValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/PathAngleRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.82, 0.48, 1)
+text = "30°"
+
+[node name="PathAngleSlider" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 70.0
+step = 0.5
+value = 30.0
+
+[node name="PathStatusLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+text = "Path-Tool: rote Steigungen über Limit · zwei Klicks = Pfadprüfung"
+
+[node name="ShapesHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+text = "Linie/Kreis/Plateau/Rampe: ziehen. Bogen: 3 Klicks. Esc/RMB bricht ab."
 
 [node name="SepMirror" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 layout_mode = 2
@@ -585,13 +763,13 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Pegel"
+text = "Pegel (m)"
 
 [node name="WaterLevelValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater/WaterRow"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.78, 0.9, 1)
-text = "0.0"
+text = "0.0 m"
 
 [node name="WaterLevel" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionWater"]
 unique_name_in_owner = true
@@ -623,12 +801,107 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Alle Alloys löschen"
 
+[node name="SepProps" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+
+[node name="SectionProps" type="VBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PropsHeader" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
+theme_override_fonts/font = ExtResource("3_syne")
+theme_override_font_sizes/font_size = 15
+text = "PROPS"
+
+[node name="PropBlueprintLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Blueprint"
+
+[node name="PropBlueprint" type="OptionButton" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+unique_name_in_owner = true
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="PropPathEdit" type="LineEdit" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Environment/.../prop.santp"
+
+[node name="PropScaleRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+layout_mode = 2
+
+[node name="PropScaleLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps/PropScaleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "Scale"
+
+[node name="PropScaleValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps/PropScaleRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.82, 1)
+text = "1.00"
+
+[node name="PropScale" type="HSlider" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.25
+max_value = 4.0
+step = 0.05
+value = 1.0
+
+[node name="PropRandomYaw" type="CheckBox" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Zufällige Drehung (Y)"
+
+[node name="PropCountLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
+text = "0 Props platziert"
+
+[node name="BtnClearPropType" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Aktuellen Typ löschen"
+
+[node name="BtnClearProps" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Alle Props löschen"
+
+[node name="PropHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.62, 0.56, 1)
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 3
+text = "Platzhalter-Boxen im Editor. Im Spiel werden .santp-Blueprints geladen. Mirror gilt auch für Props."
+
 [node name="HintCard" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.58, 0.62, 0.56, 1)
 theme_override_font_sizes/font_size = 12
 autowrap_mode = 3
-text = "Speichern legt Ordner MapName/ an: MapName.sanmap + Textures/heightmap.raw (+ TGA). Spawns = Army_N."
+text = "Speichern legt Ordner MapName/ an: MapName.sanmap, preview.png, Textures/… Spawns = Army_N. Undo/Redo: Ctrl+Z / Ctrl+Y."
+
+[node name="ScaleBar" type="Control" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 118.0
+offset_top = -78.0
+offset_right = 300.0
+offset_bottom = -42.0
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("6_scalebar")
 
 [node name="StatusBar" type="PanelContainer" parent="Root"]
 unique_name_in_owner = true

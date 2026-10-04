@@ -3,6 +3,7 @@ extends RefCounted
 ## Sanctuary map package IO matching official layout:
 ##   MapName/
 ##     MapName.sanmap
+##     preview.png
 ##     Textures/heightmap.raw
 ##     Textures/stratums_1_4.tga
 ##     Textures/stratums_5_8.tga
@@ -80,6 +81,19 @@ static func textures_dir(sanmap_path: String) -> String:
 
 static func heightmap_raw_path(sanmap_path: String) -> String:
 	return textures_dir(sanmap_path).path_join("heightmap.raw")
+
+
+static func preview_png_path(sanmap_path: String) -> String:
+	return sanmap_path.get_base_dir().path_join("preview.png")
+
+
+static func save_preview_png(sanmap_path: String, image: Image) -> Error:
+	if image == null:
+		return ERR_INVALID_PARAMETER
+	var err := ensure_package_dir(sanmap_path)
+	if err != OK:
+		return err
+	return image.save_png(preview_png_path(sanmap_path))
 
 
 static func companion_heightmap_path(sanmap_path: String) -> String:
@@ -206,6 +220,41 @@ static func make_default_splat_images(resolution: int) -> Array:
 	return [img14, img58]
 
 
+static func make_default_tint_images(resolution: int) -> Array:
+	## Returns [tint_colors, tint_geometry] with game-neutral fills.
+	var colors := Image.create(resolution, resolution, false, Image.FORMAT_RGBA8)
+	colors.fill(neutral_tint_colors())
+	var geometry := Image.create(resolution, resolution, false, Image.FORMAT_RGBA8)
+	geometry.fill(neutral_tint_geometry())
+	return [colors, geometry]
+
+
+static func tint_path_colors(sanmap_path: String) -> String:
+	return textures_dir(sanmap_path).path_join("tint_colors.tga")
+
+
+static func tint_path_geometry(sanmap_path: String) -> String:
+	return textures_dir(sanmap_path).path_join("tint_geometry.tga")
+
+
+static func load_package_tint_images(sanmap_path: String, map: SanMapData) -> Array:
+	var res := tint_resolution_for_map(map)
+	var defaults := make_default_tint_images(res)
+	if sanmap_path.is_empty():
+		return defaults
+	var colors := load_rgba_tga_image(tint_path_colors(sanmap_path))
+	var geometry := load_rgba_tga_image(tint_path_geometry(sanmap_path))
+	if colors == null:
+		colors = defaults[0]
+	elif colors.get_width() != res or colors.get_height() != res:
+		colors.resize(res, res, Image.INTERPOLATE_BILINEAR)
+	if geometry == null:
+		geometry = defaults[1]
+	elif geometry.get_width() != res or geometry.get_height() != res:
+		geometry.resize(res, res, Image.INTERPOLATE_BILINEAR)
+	return [colors, geometry]
+
+
 static func load_rgba_tga_image(path: String) -> Image:
 	if path.is_empty() or not FileAccess.file_exists(path):
 		return null
@@ -268,7 +317,9 @@ static func save_package_textures(
 	sanmap_path: String,
 	map: SanMapData,
 	splat_1_4: Image = null,
-	splat_5_8: Image = null
+	splat_5_8: Image = null,
+	tint_colors: Image = null,
+	tint_geometry: Image = null
 ) -> Error:
 	var err := ensure_textures_dir(sanmap_path)
 	if err != OK:
@@ -307,13 +358,29 @@ static func save_package_textures(
 			return err
 
 	var full_tint := tex_dir.path_join("tint_colors.tga")
-	if _tga_needs_rewrite(full_tint, tint_res, true):
+	if tint_colors != null:
+		var img_tc := tint_colors
+		if img_tc.get_width() != tint_res or img_tc.get_height() != tint_res:
+			img_tc = img_tc.duplicate()
+			img_tc.resize(tint_res, tint_res, Image.INTERPOLATE_BILINEAR)
+		err = write_image_rgba_tga(full_tint, img_tc)
+		if err != OK:
+			return err
+	elif _tga_needs_rewrite(full_tint, tint_res, true):
 		err = write_rgba_tga(full_tint, tint_res, neutral_tint_colors())
 		if err != OK:
 			return err
 
 	var full_geo := tex_dir.path_join("tint_geometry.tga")
-	if _tga_needs_rewrite(full_geo, tint_res, true):
+	if tint_geometry != null:
+		var img_tg := tint_geometry
+		if img_tg.get_width() != tint_res or img_tg.get_height() != tint_res:
+			img_tg = img_tg.duplicate()
+			img_tg.resize(tint_res, tint_res, Image.INTERPOLATE_BILINEAR)
+		err = write_image_rgba_tga(full_geo, img_tg)
+		if err != OK:
+			return err
+	elif _tga_needs_rewrite(full_geo, tint_res, true):
 		err = write_rgba_tga(full_geo, tint_res, neutral_tint_geometry())
 		if err != OK:
 			return err
@@ -398,7 +465,9 @@ static func save_map_package(
 	map: SanMapData,
 	heights: PackedFloat32Array,
 	splat_1_4: Image = null,
-	splat_5_8: Image = null
+	splat_5_8: Image = null,
+	tint_colors: Image = null,
+	tint_geometry: Image = null
 ) -> Error:
 	map.ensure_playable_materials()
 	var err := ensure_package_dir(sanmap_path)
@@ -413,5 +482,5 @@ static func save_map_package(
 	err = save_heightmap_raw(heightmap_raw_path(sanmap_path), heights, map.heightmap_resolution)
 	if err != OK:
 		return err
-	err = save_package_textures(sanmap_path, map, splat_1_4, splat_5_8)
+	err = save_package_textures(sanmap_path, map, splat_1_4, splat_5_8, tint_colors, tint_geometry)
 	return err

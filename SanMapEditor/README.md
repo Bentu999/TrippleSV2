@@ -19,16 +19,21 @@ Externer Karteneditor für **Sanctuary: Shattered Sun** (`.sanmap` Format Versio
 | RMB ziehen | Kamera orbit |
 | MMB ziehen | Pan |
 | Mausrad | Zoom |
-| LMB | Aktives Werkzeug (Pinsel / Marker) |
+| LMB | Aktives Werkzeug (Pinsel / Marker / Prop) |
+| Ctrl+Z | Undo |
+| Ctrl+Y / Ctrl+Shift+Z | Redo |
+
+Props: Tool **Prop** wählen, Blueprint im Dock auswählen, LMB auf Terrain. Scale und Zufalls-Yaw im Dock. Mirror gilt auch hier. Im Editor erscheinen farbige Proxy-Boxen; im Spiel laden die `.santp`-Blueprints.
 
 ## Dateiformat (wie offizielle Karten, z. B. The Forge)
 
 ```
 MeineKarte/
   MeineKarte.sanmap
+  preview.png              # Top-Down-Vorschau (max. 1024²)
   Textures/
     heightmap.raw          # 16-bit LE, heightmapResolution²
-    stratums_1_4.tga       # 2×Kartengröße, RGBA splat
+    stratums_1_4.tga       # splat size == heightmapResolution
     stratums_5_8.tga
     tint_colors.tga
     tint_geometry.tga
@@ -42,12 +47,13 @@ MeineKarte/
 - 3D-Terrain aus Heightmap
 - Pinsel: Anheben, Absenken, Glätten, Ebnen
 - Marker: Spawn, Alloys
+- Props platzieren (Blueprint-Gruppen, Undo, Proxy-Vorschau)
 - PlayableArea-Overlay
 - Wasser-Toggle + Level
 
 ## Nächste Schritte (geplant)
 
-- Stratum-/Splatmap-Texturing
-- Props & Decals
+- Prop-Mesh-Vorschau (.santp)
+- Decals
 - Lighting-/Fog-Panel
 - Import offizieller Heightmaps aus dem Spiel-Editor

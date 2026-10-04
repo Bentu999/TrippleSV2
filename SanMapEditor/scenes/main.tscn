@@ -4,32 +4,22 @@
 [ext_resource type="Script" path="res://scripts/terrain/terrain_mesh.gd" id="2_terrain"]
 [ext_resource type="Script" path="res://scripts/editor/editor_controller.gd" id="3_ctrl"]
 [ext_resource type="PackedScene" uid="uid://sanmapeditorui01" path="res://scenes/ui/editor_ui.tscn" id="4_ui"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
-sky_top_color = Color(0.35, 0.55, 0.78, 1)
-sky_horizon_color = Color(0.72, 0.78, 0.82, 1)
-ground_bottom_color = Color(0.18, 0.2, 0.16, 1)
-ground_horizon_color = Color(0.55, 0.58, 0.5, 1)
-sun_angle_max = 40.0
-
-[sub_resource type="Sky" id="Sky_1"]
-sky_material = SubResource("ProceduralSkyMaterial_1")
+[ext_resource type="Script" path="res://scripts/editor/map_lighting.gd" id="5_light"]
+[ext_resource type="Script" path="res://scripts/editor/scale_guides.gd" id="6_scale"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 2
-sky = SubResource("Sky_1")
 ambient_light_source = 3
-ambient_light_color = Color(0.78, 0.84, 0.9, 1)
-ambient_light_sky_contribution = 0.7
-ambient_light_energy = 0.65
+ambient_light_sky_contribution = 0.85
+ambient_light_energy = 0.55
 tonemap_mode = 3
-tonemap_exposure = 1.05
+tonemap_exposure = 1.0
 ssao_enabled = true
 ssao_radius = 1.6
 ssao_intensity = 1.8
 glow_enabled = true
-glow_intensity = 0.25
-glow_bloom = 0.05
+glow_intensity = 0.22
+glow_bloom = 0.04
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_1"]
 
@@ -46,6 +36,9 @@ shadow_enabled = true
 directional_shadow_mode = 1
 directional_shadow_max_distance = 1600.0
 
+[node name="MapLighting" type="Node" parent="."]
+script = ExtResource("5_light")
+
 [node name="OrbitCamera" type="Node3D" parent="."]
 script = ExtResource("1_orbit")
 
@@ -61,11 +54,15 @@ visible = false
 
 [node name="PlayableArea" type="MeshInstance3D" parent="."]
 
-[node name="BrushRing" type="MeshInstance3D" parent="."]
+[node name="ScaleGuides" type="Node3D" parent="."]
+script = ExtResource("6_scale")
 
+[node name="BrushRing" type="MeshInstance3D" parent="."]
 [node name="MirrorBrushRings" type="Node3D" parent="."]
 
 [node name="Markers" type="Node3D" parent="."]
+
+[node name="Props" type="Node3D" parent="."]
 
 [node name="EditorController" type="Node3D" parent="."]
 script = ExtResource("3_ctrl")

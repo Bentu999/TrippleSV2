@@ -4,9 +4,9 @@ extends Node3D
 @onready var camera: Camera3D = $Camera3D
 
 var _yaw: float = 45.0
-var _pitch: float = 35.0
+var _pitch: float = 42.0
 var _distance: float = 220.0
-var _focus: Vector3 = Vector3(128, 20, 128)
+var _focus: Vector3 = Vector3(128, 8, 128)
 var _orbiting: bool = false
 var _panning: bool = false
 
@@ -18,9 +18,19 @@ func _ready() -> void:
 
 
 func _on_map_changed() -> void:
+	# Aim near the starting land surface (above water), not empty air.
+	var land_y := float(EditorState.map.height) * 0.06
+	if EditorState.heights.size() > 0:
+		land_y = EditorState.sample_world_height(
+			Vector3(float(EditorState.map.width) * 0.5, 0.0, float(EditorState.map.length) * 0.5)
+		)
+		if EditorState.map.has_water:
+			land_y = maxf(land_y, float(EditorState.map.water_level) + 2.0)
+	elif EditorState.map.has_water:
+		land_y = float(EditorState.map.water_level) + 4.0
 	_focus = Vector3(
 		float(EditorState.map.width) * 0.5,
-		float(EditorState.map.height) * 0.2,
+		land_y,
 		float(EditorState.map.length) * 0.5
 	)
 	_distance = maxf(EditorState.map.width, EditorState.map.length) * 0.9

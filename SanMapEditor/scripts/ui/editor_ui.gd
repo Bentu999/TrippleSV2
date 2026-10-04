@@ -47,9 +47,17 @@ func _ready() -> void:
 	_wire_tool_button(%BtnLower, EditorState.Tool.LOWER)
 	_wire_tool_button(%BtnSmooth, EditorState.Tool.SMOOTH)
 	_wire_tool_button(%BtnFlatten, EditorState.Tool.SET_HEIGHT)
+	_wire_tool_button(%BtnMeasure, EditorState.Tool.MEASURE_HEIGHT)
 	_wire_tool_button(%BtnPaint, EditorState.Tool.PAINT_TEXTURE)
+	_wire_tool_button(%BtnLine, EditorState.Tool.SHAPE_LINE)
+	_wire_tool_button(%BtnCircle, EditorState.Tool.SHAPE_CIRCLE)
+	_wire_tool_button(%BtnArc, EditorState.Tool.SHAPE_ARC)
+	_wire_tool_button(%BtnPlateau, EditorState.Tool.SHAPE_PLATEAU)
+	_wire_tool_button(%BtnRamp, EditorState.Tool.SHAPE_RAMP)
+	_wire_tool_button(%BtnPathing, EditorState.Tool.PATHING)
 	_wire_tool_button(%BtnSpawn, EditorState.Tool.MARKER_SPAWN)
 	_wire_tool_button(%BtnAlloys, EditorState.Tool.MARKER_ALLOYS)
+	_wire_tool_button(%BtnProp, EditorState.Tool.PLACE_PROP)
 	_wire_view_button(%BtnView3D, EditorState.ViewMode.VIEW_3D)
 	_wire_view_button(%BtnView2D, EditorState.ViewMode.VIEW_2D)
 	_wire_view_button(%BtnViewHM, EditorState.ViewMode.VIEW_HEIGHTMAP)
@@ -67,9 +75,22 @@ func _ready() -> void:
 		_prepare_save_dialog()
 		save_dialog.popup_centered_ratio(0.65)
 	)
+	%BtnUndo.pressed.connect(func() -> void: EditorState.undo())
+	%BtnRedo.pressed.connect(func() -> void: EditorState.redo())
+	EditorState.history_changed.connect(_sync_history_buttons)
 	%BtnApplySize.pressed.connect(_on_apply_size)
 	%BtnClearSpawns.pressed.connect(func() -> void: EditorState.clear_markers(SanMapData.MARKER_SPAWN))
 	%BtnClearAlloys.pressed.connect(func() -> void: EditorState.clear_markers(SanMapData.MARKER_ALLOYS))
+	_populate_prop_blueprints()
+	%PropBlueprint.item_selected.connect(_on_prop_blueprint_selected)
+	%PropPathEdit.text_submitted.connect(_on_prop_path_submitted)
+	%PropPathEdit.focus_exited.connect(_on_prop_path_focus_exited)
+	%PropScale.value_changed.connect(_on_prop_scale)
+	%PropRandomYaw.toggled.connect(func(on: bool) -> void: EditorState.set_prop_random_yaw(on))
+	%BtnClearPropType.pressed.connect(func() -> void: EditorState.clear_props_of_type(EditorState.prop_blueprint))
+	%BtnClearProps.pressed.connect(func() -> void: EditorState.clear_props())
+	EditorState.props_changed.connect(_sync_prop_count)
+	EditorState.prop_settings_changed.connect(_sync_prop_settings)
 	%BtnMirrorX.toggle_mode = true
 	%BtnMirrorZ.toggle_mode = true
 	%BtnMirrorX.toggled.connect(func(on: bool) -> void: EditorState.set_mirror_x(on))
@@ -79,8 +100,14 @@ func _ready() -> void:
 	brush_radius.value_changed.connect(_on_brush_radius)
 	brush_strength.value_changed.connect(_on_brush_strength)
 	set_height_slider.value_changed.connect(_on_set_height)
+	%RampAngleSlider.value_changed.connect(_on_ramp_angle)
+	%PathAngleSlider.value_changed.connect(_on_path_angle)
 	water_check.toggled.connect(_on_water_toggled)
 	water_level.value_changed.connect(_on_water_level)
+	%ScaleGuidesCheck.toggled.connect(_on_scale_guides_toggled)
+	EditorState.scale_guides_changed.connect(_sync_scale_guides_check)
+	water_level.drag_started.connect(func() -> void: EditorState.begin_stroke("Water level"))
+	water_level.drag_ended.connect(func(_value_changed: bool) -> void: EditorState.end_stroke())
 	name_edit.text_changed.connect(_on_name_changed)
 
 	open_dialog.file_selected.connect(_on_open_selected)
@@ -90,10 +117,13 @@ func _ready() -> void:
 	EditorState.dirty_changed.connect(_update_status)
 	EditorState.tool_changed.connect(_on_tool_changed)
 	EditorState.view_changed.connect(_on_view_changed)
+	EditorState.measurement_changed.connect(_update_status)
+	EditorState.pathing_changed.connect(_sync_pathing_status)
 
 	_play_intro_motion()
 	_sync_from_state()
 	_highlight_views()
+	_sync_history_buttons()
 	_update_status()
 
 
@@ -101,6 +131,18 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if not (event is InputEventKey) or not event.pressed or event.echo:
 		return
 	var key := event as InputEventKey
+	var focus := get_viewport().gui_get_focus_owner()
+	var typing := focus is LineEdit or focus is TextEdit or focus is SpinBox
+	if not typing and key.ctrl_pressed and key.keycode == KEY_Z and not key.shift_pressed:
+		EditorState.undo()
+		_update_status()
+		get_viewport().set_input_as_handled()
+		return
+	if not typing and key.ctrl_pressed and (key.keycode == KEY_Y or (key.keycode == KEY_Z and key.shift_pressed)):
+		EditorState.redo()
+		_update_status()
+		get_viewport().set_input_as_handled()
+		return
 	match key.keycode:
 		KEY_F1:
 			EditorState.set_view_mode(EditorState.ViewMode.VIEW_3D)
@@ -210,23 +252,142 @@ func _sync_from_state() -> void:
 	res_spin.value = m.heightmap_resolution
 	brush_radius.set_value_no_signal(EditorState.brush_radius)
 	brush_strength.set_value_no_signal(EditorState.brush_strength)
-	brush_radius_value.text = "%.0f" % EditorState.brush_radius
+	brush_radius_value.text = "%.0f m" % EditorState.brush_radius
 	brush_strength_value.text = "%.2f/s" % EditorState.brush_strength
 	set_height_slider.max_value = float(m.height)
 	EditorState.set_height_world = clampf(EditorState.set_height_world, 0.0, float(m.height))
 	set_height_slider.set_value_no_signal(EditorState.set_height_world)
-	set_height_value.text = "%.1f" % EditorState.set_height_world
+	set_height_value.text = "%.1f m" % EditorState.set_height_world
+	%RampAngleSlider.set_value_no_signal(EditorState.ramp_angle_deg)
+	%RampAngleValue.text = "%.1f°" % EditorState.ramp_angle_deg
+	%PathAngleSlider.set_value_no_signal(EditorState.pathing_max_angle_deg)
+	%PathAngleValue.text = "%.1f°" % EditorState.pathing_max_angle_deg
+	_sync_pathing_status()
 	water_check.set_pressed_no_signal(m.has_water)
 	water_level.max_value = float(m.height)
 	water_level.set_value_no_signal(m.water_level)
-	water_level_value.text = "%.1f" % m.water_level
+	water_level_value.text = "%.1f m" % m.water_level
+	_sync_scale_guides_check()
 	_highlight_tools()
 	_highlight_views()
 	_sync_mirror_buttons()
 	_sync_terrain_preset_selection()
 	_sync_paint_layers()
+	_sync_prop_settings()
+	_sync_prop_count()
 	_update_status()
 	_syncing = false
+
+
+func _populate_prop_blueprints() -> void:
+	var btn: OptionButton = %PropBlueprint
+	btn.clear()
+	var paths := PropCatalog.all_blueprints()
+	for i in paths.size():
+		var path := paths[i]
+		btn.add_item(PropCatalog.display_name(path), i)
+		btn.set_item_metadata(i, path)
+		btn.set_item_tooltip(i, path)
+	_sync_prop_blueprint_selection()
+
+
+func _sync_prop_blueprint_selection() -> void:
+	var btn: OptionButton = %PropBlueprint
+	var target := EditorState.prop_blueprint
+	for i in btn.item_count:
+		if str(btn.get_item_metadata(i)) == target:
+			btn.select(i)
+			return
+	# Custom path not in catalog — keep selection, show in path edit.
+	if btn.item_count > 0 and target.is_empty():
+		btn.select(0)
+		EditorState.set_prop_blueprint(str(btn.get_item_metadata(0)))
+
+
+func _sync_prop_settings() -> void:
+	# May be called from inside _sync_from_state (_syncing already true).
+	var nested := _syncing
+	_syncing = true
+	_sync_prop_blueprint_selection()
+	%PropPathEdit.text = EditorState.prop_blueprint
+	%PropScale.set_value_no_signal(EditorState.prop_scale)
+	%PropScaleValue.text = "%.2f" % EditorState.prop_scale
+	%PropRandomYaw.set_pressed_no_signal(EditorState.prop_random_yaw)
+	_syncing = nested
+
+
+func _sync_prop_count() -> void:
+	var n := EditorState.prop_instance_count()
+	var groups := EditorState.map.props.size()
+	%PropCountLabel.text = "%d Props · %d Typen" % [n, groups]
+	# Maps may introduce new blueprints; refresh list without losing selection.
+	var btn: OptionButton = %PropBlueprint
+	var known := {}
+	for i in btn.item_count:
+		known[str(btn.get_item_metadata(i))] = true
+	var needs_refresh := false
+	for group in EditorState.map.props:
+		if typeof(group) != TYPE_DICTIONARY:
+			continue
+		var bp := str(group.get("blueprintPath", ""))
+		if not bp.is_empty() and not known.has(bp):
+			needs_refresh = true
+			break
+	if needs_refresh:
+		PropCatalog.merge_from_map(EditorState.map)
+		_populate_prop_blueprints()
+		_sync_prop_settings()
+
+
+func _on_prop_blueprint_selected(index: int) -> void:
+	if _syncing:
+		return
+	var path := str(%PropBlueprint.get_item_metadata(index))
+	EditorState.set_prop_blueprint(path)
+	%PropPathEdit.text = path
+	_update_status()
+
+
+func _on_prop_path_submitted(text: String) -> void:
+	_apply_prop_path_edit(text)
+
+
+func _on_prop_path_focus_exited() -> void:
+	_apply_prop_path_edit(%PropPathEdit.text)
+
+
+func _apply_prop_path_edit(text: String) -> void:
+	if _syncing:
+		return
+	var path := text.strip_edges().replace("\\", "/")
+	if path.is_empty():
+		%PropPathEdit.text = EditorState.prop_blueprint
+		return
+	EditorState.set_prop_blueprint(path)
+	# Add custom path to dropdown if missing.
+	var btn: OptionButton = %PropBlueprint
+	var found := -1
+	for i in btn.item_count:
+		if str(btn.get_item_metadata(i)) == path:
+			found = i
+			break
+	if found < 0:
+		var idx := btn.item_count
+		btn.add_item(PropCatalog.display_name(path), idx)
+		btn.set_item_metadata(idx, path)
+		btn.set_item_tooltip(idx, path)
+		btn.select(idx)
+	else:
+		btn.select(found)
+	_update_status()
+
+
+func _on_prop_scale(value: float) -> void:
+	if _syncing:
+		return
+	EditorState.set_prop_scale(value)
+	%PropScaleValue.text = "%.2f" % EditorState.prop_scale
+	_update_status()
 
 
 func _populate_terrain_presets() -> void:
@@ -298,9 +459,17 @@ func _update_status() -> void:
 		EditorState.Tool.LOWER: "Absenken",
 		EditorState.Tool.SMOOTH: "Glätten",
 		EditorState.Tool.SET_HEIGHT: "Höhe setzen",
+		EditorState.Tool.MEASURE_HEIGHT: "Höhe messen",
 		EditorState.Tool.PAINT_TEXTURE: "Textur malen",
+		EditorState.Tool.SHAPE_LINE: "Linie",
+		EditorState.Tool.SHAPE_CIRCLE: "Kreis",
+		EditorState.Tool.SHAPE_ARC: "Bogen",
+		EditorState.Tool.SHAPE_PLATEAU: "Plateau",
+		EditorState.Tool.SHAPE_RAMP: "Rampe",
+		EditorState.Tool.PATHING: "Pathing",
 		EditorState.Tool.MARKER_SPAWN: "Spawn setzen",
 		EditorState.Tool.MARKER_ALLOYS: "Alloys setzen",
+		EditorState.Tool.PLACE_PROP: "Prop setzen",
 	}
 	var tool_name: String = tool_names.get(EditorState.active_tool, "?")
 	var view_names := {
@@ -314,11 +483,13 @@ func _update_status() -> void:
 	if EditorState.mirror_z_enabled:
 		mirror_bits.append("MZ")
 	var mirror_txt := ("  ·  Mirror " + " ".join(mirror_bits)) if not mirror_bits.is_empty() else ""
-	status_label.text = "%s  ·  %s  ·  %s%s  ·  %d × %d" % [
+	var measure_txt := _measure_status_text()
+	status_label.text = "%s  ·  %s  ·  %s%s%s  ·  %d × %d m" % [
 		path.get_file() if EditorState.current_path != "" else path,
 		view_names.get(EditorState.view_mode, "?"),
 		tool_name,
 		mirror_txt,
+		measure_txt,
 		EditorState.map.width,
 		EditorState.map.length,
 	]
@@ -337,22 +508,69 @@ func _hint_for_tool(tool: EditorState.Tool) -> String:
 		EditorState.Tool.SMOOTH:
 			return "LMB halten: Kanten glätten"
 		EditorState.Tool.SET_HEIGHT:
-			return "LMB: auf %.1f setzen · Shift+Klick: Höhe sampeln" % EditorState.set_height_world
+			return "LMB: auf %.1f m setzen · Shift+Klick: Höhe sampeln" % EditorState.set_height_world
+		EditorState.Tool.MEASURE_HEIGHT:
+			if EditorState.measure_live_valid:
+				return "Live %.1f m · Klick: pinnen + Zielhöhe im Pinsel setzen" % EditorState.measure_live_height
+			return "Cursor über Terrain: Höhe lesen · Klick: pinnen + Zielhöhe im Pinsel setzen"
 		EditorState.Tool.PAINT_TEXTURE:
-			return "LMB halten: Schicht %d malen · Mirror gilt auch hier" % EditorState.paint_layer
+			return "LMB halten: Schicht %d malen · Mirror gilt auch hier" % (EditorState.paint_layer + 1)
 		EditorState.Tool.MARKER_SPAWN:
 			return "LMB: Spawn-Marker setzen"
 		EditorState.Tool.MARKER_ALLOYS:
 			return "LMB: Alloy-Marker setzen"
+		EditorState.Tool.PLACE_PROP:
+			return "LMB: %s setzen · Scale %.2f%s" % [
+				PropCatalog.display_name(EditorState.prop_blueprint),
+				EditorState.prop_scale,
+				" · Mirror" if (EditorState.mirror_x_enabled or EditorState.mirror_z_enabled) else "",
+			]
+		EditorState.Tool.SHAPE_LINE:
+			return "Ziehen: Linie auf %.1f m · Breite = Pinselradius" % EditorState.set_height_world
+		EditorState.Tool.SHAPE_CIRCLE:
+			return "Zentrum → Radius ziehen: Kreis auf %.1f m" % EditorState.set_height_world
+		EditorState.Tool.SHAPE_ARC:
+			return "3 Klicks: Start · Punkt auf Bogen · Ende · Breite = Pinselradius"
+		EditorState.Tool.SHAPE_PLATEAU:
+			return "Ziehen: Rechteck-Plateau auf %.1f m" % EditorState.set_height_world
+		EditorState.Tool.SHAPE_RAMP:
+			return "Ziehen: Rampe von Terrainhöhe → %.1f m bei %.1f°" % [
+				EditorState.set_height_world,
+				EditorState.ramp_angle_deg,
+			]
+		EditorState.Tool.PATHING:
+			if not EditorState.pathing_status.is_empty():
+				return EditorState.pathing_status
+			return "Rot = zu steil (>%.0f°) · zwei Klicks: Pfad prüfen · Esc bricht ab" % EditorState.pathing_max_angle_deg
 		_:
 			return ""
+
+
+func _measure_status_text() -> String:
+	if EditorState.measure_pinned:
+		var p := EditorState.measure_pinned_pos
+		return "  ·  Pin %.1f m @ %.0f,%.0f (%.0f%%)" % [
+			EditorState.measure_pinned_height,
+			p.x,
+			p.z,
+			EditorState.measure_normalized(EditorState.measure_pinned_height) * 100.0,
+		]
+	if EditorState.active_tool == EditorState.Tool.MEASURE_HEIGHT and EditorState.measure_live_valid:
+		var p2 := EditorState.measure_live_pos
+		return "  ·  H %.1f m @ %.0f,%.0f (%.0f%%)" % [
+			EditorState.measure_live_height,
+			p2.x,
+			p2.z,
+			EditorState.measure_normalized(EditorState.measure_live_height) * 100.0,
+		]
+	return ""
 
 
 func _on_brush_radius(v: float) -> void:
 	if _syncing:
 		return
 	EditorState.brush_radius = v
-	brush_radius_value.text = "%.0f" % v
+	brush_radius_value.text = "%.0f m" % v
 
 
 func _on_brush_strength(v: float) -> void:
@@ -366,8 +584,43 @@ func _on_set_height(v: float) -> void:
 	if _syncing:
 		return
 	EditorState.set_height_world = v
-	set_height_value.text = "%.1f" % v
+	set_height_value.text = "%.1f m" % v
 	_update_status()
+
+
+func _on_ramp_angle(v: float) -> void:
+	if _syncing:
+		return
+	EditorState.set_ramp_angle_deg(v)
+	%RampAngleValue.text = "%.1f°" % EditorState.ramp_angle_deg
+	_update_status()
+
+
+func _on_path_angle(v: float) -> void:
+	if _syncing:
+		return
+	EditorState.set_pathing_max_angle_deg(v)
+	%PathAngleValue.text = "%.1f°" % EditorState.pathing_max_angle_deg
+	_update_status()
+
+
+func _sync_pathing_status() -> void:
+	var label: Label = %PathStatusLabel
+	if EditorState.pathing_status.is_empty():
+		label.text = "Path-Tool: rote Steigungen über Limit · zwei Klicks = Pfadprüfung"
+	else:
+		label.text = EditorState.pathing_status
+	_update_status()
+
+
+func _on_scale_guides_toggled(pressed: bool) -> void:
+	if _syncing:
+		return
+	EditorState.set_show_scale_guides(pressed)
+
+
+func _sync_scale_guides_check() -> void:
+	%ScaleGuidesCheck.set_pressed_no_signal(EditorState.show_scale_guides)
 
 
 func sync_set_height_from_state() -> void:
@@ -375,7 +628,7 @@ func sync_set_height_from_state() -> void:
 	_syncing = true
 	set_height_slider.max_value = float(EditorState.map.height)
 	set_height_slider.set_value_no_signal(EditorState.set_height_world)
-	set_height_value.text = "%.1f" % EditorState.set_height_world
+	set_height_value.text = "%.1f m" % EditorState.set_height_world
 	_syncing = false
 	_update_status()
 
@@ -433,15 +686,16 @@ func _on_name_changed(text: String) -> void:
 func _on_water_toggled(pressed: bool) -> void:
 	if _syncing:
 		return
-	EditorState.map.has_water = pressed
-	EditorState.mark_dirty()
-	EditorState.map_changed.emit()
+	EditorState.set_water_enabled(pressed)
 
 
 func _on_water_level(value: float) -> void:
 	if _syncing:
 		return
-	EditorState.map.water_level = value
-	water_level_value.text = "%.1f" % value
-	EditorState.mark_dirty()
-	EditorState.map_changed.emit()
+	EditorState.set_water_level(value)
+	water_level_value.text = "%.1f m" % value
+
+
+func _sync_history_buttons() -> void:
+	%BtnUndo.disabled = not EditorState.can_undo()
+	%BtnRedo.disabled = not EditorState.can_redo()
