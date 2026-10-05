@@ -251,6 +251,8 @@ func _draw() -> void:
 		else:
 			var radius_px := maxf((EditorState.brush_radius / float(EditorState.map.width)) * rect.size.x, 4.0)
 			var points := EditorState.expand_brush_world_points(world)
+			if EditorState.active_tool == EditorState.Tool.MARKER_SPAWN or EditorState.active_tool == EditorState.Tool.MARKER_ALLOYS:
+				points = EditorState.expand_marker_world_points(world)
 			for i in points.size():
 				var p: Vector3 = points[i]
 				var uv := Vector2(p.x / float(EditorState.map.width), p.z / float(EditorState.map.length))

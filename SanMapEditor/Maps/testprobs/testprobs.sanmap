@@ -1,0 +1,2731 @@
+{
+  "fileVersion": 3,
+  "mapVersion": 1,
+  "name": "testprobs",
+  "credits": "All 94 Environment props on even grid (10x10)",
+  "width": 256,
+  "length": 256,
+  "height": 128,
+  "heightmapResolution": 257,
+  "hasWater": false,
+  "waterLevel": 0.0,
+  "waterDepth": 8.0,
+  "waterWindSpeed": 0.25,
+  "waterWindDirection": 160.0,
+  "waterWindShoreWavesRemap": 0.5,
+  "waterShoreDepthOffset": 8.0,
+  "waterShoreDepthStrength": 0.7,
+  "waterShoreDistanceOffset": 0.0,
+  "waterShoreDistanceStrength": 2.0,
+  "waterShoreGeneratorBlueprint": "",
+  "shader": "RTS/TerrainLit",
+  "heightTransition": 0.5,
+  "fadeDistance": 128.0,
+  "fadeStartDistance": 1.0,
+  "stratumLayers": [
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass07_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass07_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass07_mask.tga"
+      },
+      "tileSize": {
+        "x": 10.0,
+        "y": 10.0
+      },
+      "tileSizeFar": {
+        "x": 40.0,
+        "y": 40.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass02_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass02_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass02b_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_moss01_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_moss01_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_moss01_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_sand05_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_sand05_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_sand05_mask.tga"
+      },
+      "tileSize": {
+        "x": 10.0,
+        "y": 10.0
+      },
+      "tileSizeFar": {
+        "x": 40.0,
+        "y": 40.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_rock_cliff02_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_rock_cliff02_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_rock_cliff02_masks.tga"
+      },
+      "tileSize": {
+        "x": 12.0,
+        "y": 12.0
+      },
+      "tileSizeFar": {
+        "x": 48.0,
+        "y": 48.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_heather03_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_heather03_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_heather03_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_mud02_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_mud02_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_mud02_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass03_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass03_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass03_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": ""
+      },
+      "normal": {
+        "path": ""
+      },
+      "mask": {
+        "path": ""
+      },
+      "tileSize": {
+        "x": 1.0,
+        "y": 1.0
+      },
+      "tileSizeFar": {
+        "x": 1.0,
+        "y": 1.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "backgroundFogIntensity": 0.425,
+  "backgroundFogRange": 1024.0,
+  "backgroundFogMinimum": 0.1,
+  "backgroundSkyColorIntensity": 0.52,
+  "backgroundColorIntensity": 1.0,
+  "backgroundColor": {
+    "r": 1.319508,
+    "g": 1.319508,
+    "b": 1.319508,
+    "a": 1.0
+  },
+  "backgroundColorFadeoutRange": 150000.0,
+  "backgroundColorFadeoutPower": 0.3,
+  "heightFogIntensity": 1.0,
+  "heightFogRange": {
+    "x": -10.0,
+    "y": 100.0
+  },
+  "heightFogStart": -10.0,
+  "heightFogEnd": 500.0,
+  "heightFogPower": 6.0,
+  "linearFogIntensity": 0.24,
+  "linearFogStart": 100.0,
+  "linearFogEnd": 5000.0,
+  "linearFogPower": 1.0,
+  "linearFogCameraIntensity": 0.0,
+  "linearFogCameraStart": 500.0,
+  "linearFogCameraEnd": 5000.0,
+  "sunRA": 96.2,
+  "sunDA": 30.0,
+  "sunIntensity": 60000.0,
+  "sunTint": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+  },
+  "sunTemperature": 9800.0,
+  "sunAngularDiameter": 0.5,
+  "sunVolumetricsMultiplier": 6.7,
+  "sunVolumetricsShadowDimer": 0.5,
+  "sunPosition": {
+    "x": 512.0,
+    "y": 10.0,
+    "z": 256.0
+  },
+  "sunCookie": {
+    "path": ""
+  },
+  "sunCookieSize": {
+    "x": 1024.0,
+    "y": 1024.0
+  },
+  "skylightIntensity": 0.0,
+  "skylightTint": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+  },
+  "skylightTemperature": 12000.0,
+  "exposure": 11.5,
+  "exposureCompensation": 0.0,
+  "skyboxRotation": 232.0,
+  "skyboxIntensityMode": "Exposure",
+  "skyboxExposure": 12.9,
+  "skyboxMultiplier": 1.0,
+  "skyboxLuxValue": 30000.0,
+  "fogAttenuationDistance": 251.0,
+  "fogBaseHeight": 5.41,
+  "fogMaximumHeight": 132.5,
+  "fogMaximumDistance": 1500.0,
+  "fogAnisotropy": 0.0,
+  "skybox": {
+    "path": "Environment/Skybox/kloofendal_48d_partly_cloudy_puresky_4k.exr"
+  },
+  "areas": {
+    "PlayableArea": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 256.0,
+      "height": 256.0
+    }
+  },
+  "armies": {},
+  "chains": {},
+  "markers": {
+    "Alloys": {
+      "resource": true,
+      "transforms": {}
+    },
+    "Spawn": {
+      "resource": false,
+      "transforms": {}
+    }
+  },
+  "decals": [],
+  "windSpeed": 0.25,
+  "windDirection": 160.0,
+  "props": [
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0101/edbm0101.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 8.83021286335546,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0102/edbm0102.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 40.888888888888886,
+            "y": 8.732555123216601,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0103/edbm0103.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 65.77777777777777,
+            "y": 11.238235717979366,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0104/edbm0104.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 10.114737671981892,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0105/edbm0105.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 115.55555555555556,
+            "y": 10.072202300721413,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0106/edbm0106.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 140.44444444444446,
+            "y": 10.072202300721411,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0121/edbm0121.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 10.114737671981892,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0122/edbm0122.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 190.22222222222223,
+            "y": 11.238235717979366,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0123/edbm0123.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 215.11111111111111,
+            "y": 8.732555123216601,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0124/edbm0124.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 8.83021286335546,
+            "z": 16.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0125/edbm0125.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 9.424188940600018,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0141/edbm0141.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 40.888888888888886,
+            "y": 11.198401005211615,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0142/edbm0142.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 65.77777777777777,
+            "y": 15.081610335444163,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0143/edbm0143.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 15.72774287982955,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0144/edbm0144.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 115.55555555555556,
+            "y": 16.099011083513002,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0145/edbm0145.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 140.44444444444446,
+            "y": 16.099011083513002,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0146/edbm0146.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 15.72774287982955,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0147/edbm0147.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 190.22222222222223,
+            "y": 15.081610335444163,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0148/edbm0148.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 215.11111111111111,
+            "y": 11.198401005211615,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0149/edbm0149.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 9.424188940600018,
+            "z": 40.888888888888886
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0150/edbm0150.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 10.76513822130668,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0161/edbm0161.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 40.888888888888886,
+            "y": 11.508181002140969,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbs0101/edbs0101.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 65.77777777777777,
+            "y": 16.739187711401033,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbs0102/edbs0102.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 16.50849842747302,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbs0110/edbs0110.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 115.55555555555556,
+            "y": 16.008900719340435,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbs0111/edbs0111.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 140.44444444444446,
+            "y": 16.008900719340435,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbs0112/edbs0112.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 16.50849842747302,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbs0113/edbs0113.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 190.22222222222223,
+            "y": 16.739187711401033,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbs0114/edbs0114.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 215.11111111111111,
+            "y": 11.508181002140969,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbs0115/edbs0115.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 10.76513822130668,
+            "z": 65.77777777777777
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbs0116/edbs0116.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 14.00086467790748,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edml0101/edml0101.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 40.888888888888886,
+            "y": 15.490036706424895,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edml0102/edml0102.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 65.77777777777777,
+            "y": 17.255254613734813,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edml0111/edml0111.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 16.16322406178208,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0101/edmm0101.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 115.55555555555556,
+            "y": 16.808343859232696,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0102/edmm0102.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 140.44444444444446,
+            "y": 16.808343859232696,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0103/edmm0103.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 16.16322406178208,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0104/edmm0104.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 190.22222222222223,
+            "y": 17.255254613734813,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0105/edmm0105.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 215.11111111111111,
+            "y": 15.490036706424895,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0106/edmm0106.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 14.00086467790748,
+            "z": 90.66666666666667
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0107/edmm0107.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 13.835497571272349,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0108/edmm0108.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 40.888888888888886,
+            "y": 16.42292131148467,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0110/edmm0110.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 65.77777777777777,
+            "y": 17.305192682828043,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0111/edmm0111.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 17.660570404844457,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0112/edmm0112.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 115.55555555555556,
+            "y": 17.31797258462399,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edmm0113/edmm0113.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 140.44444444444446,
+            "y": 17.31797258462399,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edms0101/edms0101.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 17.660570404844457,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edms0102/edms0102.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 190.22222222222223,
+            "y": 17.305192682828043,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edms0103/edms0103.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 215.11111111111111,
+            "y": 16.612015632020213,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edms0104/edms0104.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 13.835497571272349,
+            "z": 115.55555555555556
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edms0105/edms0105.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 13.835497571272349,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edms0110/edms0110.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 40.888888888888886,
+            "y": 16.42292131148467,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edms0111/edms0111.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 65.77777777777777,
+            "y": 17.305192682828043,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edms0112/edms0112.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 17.660570404844457,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/02_Evergreen/Props/edbm0201/edbm0201.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 115.55555555555556,
+            "y": 17.31797258462399,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/02_Evergreen/Props/edml0201/edml0201.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 140.44444444444446,
+            "y": 17.31797258462399,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/02_Evergreen/Props/edmm0201/edmm0201.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 17.660570404844457,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/02_Evergreen/Props/edmm0202/edmm0202.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 190.22222222222223,
+            "y": 17.305192682828043,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/02_Evergreen/Props/edmm0203/edmm0203.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 215.11111111111111,
+            "y": 16.42292131148467,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/02_Evergreen/Props/edmm0204/edmm0204.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 13.835497571272349,
+            "z": 140.44444444444446
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/04_Baikal/Props/edbm0401/edbm0401.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 14.00086467790748,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/04_Baikal/Props/edbm0402/edbm0402.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 40.888888888888886,
+            "y": 15.490036706424895,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/04_Baikal/Props/esml0401/esml0401.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 65.77777777777777,
+            "y": 17.255254613734813,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/09_Industrial/Props/TestWindow/TestWindow.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 16.163224061782085,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edbm0301/edbm0301.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 115.55555555555556,
+            "y": 16.8083438592327,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edbm0302/edbm0302.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 140.44444444444446,
+            "y": 16.8083438592327,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edbm0303/edbm0303.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 16.163224061782085,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edbs0301/edbs0301.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 190.22222222222223,
+            "y": 17.255254613734813,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edbs0302/edbs0302.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 215.11111111111111,
+            "y": 15.490036706424895,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edbs0311/edbs0311.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 14.00086467790748,
+            "z": 165.33333333333334
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edbs0312/edbs0312.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 10.76513822130668,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edbs0313/edbs0313.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 40.888888888888886,
+            "y": 11.508181002140969,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edbs0314/edbs0314.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 65.77777777777777,
+            "y": 16.739187711401033,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edml0301_chalkrock_large_01/edml0301.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 16.50849842747302,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edml0302_chalkrock_large_02/edml0302.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 115.55555555555556,
+            "y": 16.008900719340435,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edmm0301_chalkrock_01/edmm0301.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 140.44444444444446,
+            "y": 16.008900719340435,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edmm0302_chalkrock_02/edmm0302.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 16.50849842747302,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edmm0303_chalkrock_03/edmm0303.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 190.22222222222223,
+            "y": 16.739187711401033,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edmm0304_chalkrock_04/edmm0304.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 215.11111111111111,
+            "y": 11.508181002140969,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edmm0305_chalkrock_05/edmm0305.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 10.76513822130668,
+            "z": 190.22222222222223
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edmm0306_chalkrock_06/edmm0306.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 9.424188940600018,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/10_WhiteDesert/Props/edmm0307_chalkrock_07/edmm0307.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 40.888888888888886,
+            "y": 11.198401005211615,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/uel1001/uel1001.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 65.77777777777777,
+            "y": 15.081610335444163,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/uel1001/uel1001_wreckage.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 15.72774287982955,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/uel2201/uel2201.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 115.55555555555556,
+            "y": 16.099011083513002,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/uel2201/uel2201_wreckage.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 140.44444444444446,
+            "y": 16.099011083513002,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/uel3001/uel3001.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 15.72774287982955,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/uel3001/uel3001_wreckage.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 190.22222222222223,
+            "y": 15.081610335444163,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/ues1611/ues1611.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 215.11111111111111,
+            "y": 11.198401005211615,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/ues1611/ues1611_wreckage.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 9.424188940600018,
+            "z": 215.11111111111111
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/ues2611/ues2611.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 16.0,
+            "y": 8.83021286335546,
+            "z": 240.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/ues2611/ues2611_wreckage.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 90.66666666666667,
+            "y": 10.114737671981892,
+            "z": 240.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/ues3512/ues3512.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 165.33333333333334,
+            "y": 10.114737671981892,
+            "z": 240.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/Dev/Props/Units/ues3512/ues3512_wreckage.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 240.0,
+            "y": 8.83021286335546,
+            "z": 240.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    }
+  ]
+}

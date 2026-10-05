@@ -351,7 +351,6 @@ func _export_stratum_layers() -> Array:
 			continue
 		var src: Dictionary = layer
 		var dst := {
-			"name": src.get("name", null),
 			"albedo": src.get("albedo", {"path": ""}),
 			"normal": src.get("normal", {"path": ""}),
 			"mask": src.get("mask", {"path": ""}),

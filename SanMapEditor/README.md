@@ -6,11 +6,29 @@ Externer Karteneditor für **Sanctuary: Shattered Sun** (`.sanmap` Format Versio
 
 - [Godot 4.3+](https://godotengine.org/download) (Standard / Forward+)
 
-## Starten
+## Starten (Entwicklung)
 
 1. Godot öffnen → **Import** / **Open**
 2. Ordner `SanMapEditor` wählen (`project.godot`)
 3. F5 / Play
+
+## Portable EXE bauen (für andere)
+
+Voraussetzung: Godot **4.7.2** + Export-Templates (`Editor → Manage Export Templates → Download and Install`).
+
+```powershell
+powershell -ExecutionPolicy Bypass -File SanMapEditor/tools/build_windows_dist.ps1
+```
+
+Ergebnis: `dist/SanMapEditor/`
+
+| Inhalt | Bedeutung |
+|--------|-----------|
+| `SanMapEditor.exe` | Editor inkl. aller Projektdaten (**PCK eingebettet**, keine separate `.pck`) |
+| `Enviroment/` | Terrain-/Skybox-Texturen (~3 GB) **neben** der EXE — zu groß für sinnvolles Einpacken in die EXE |
+| `README.txt` | Kurzinfo für Empfänger |
+
+Preset: `export_presets.cfg` → Windows Desktop, `binary_format/embed_pck=true`. Das MCP-Addon wird beim Export ausgeschlossen.
 
 ## Bedienung
 
@@ -34,7 +52,7 @@ Sanctuary setzt die Karte außerhalb des spielbaren Bereichs mit **Infinite Terr
 | **Width / Length** | Dock KARTE | Gesamte authored Map (m) |
 | **Playable Area** (X, Z/Y, Width, Length) | Top-Bar „Karte“ → PLAYABLE AREA | Spielbarer Rechteck-Bereich in `.sanmap` → `areas.PlayableArea`; im Editor als cyanes Rechteck inkl. Eckpfosten sichtbar |
 | **Fade Start / Fade Dist** | Dock PLAYABLE AREA | `fadeStartDistance` / `fadeDistance` – Übergang des Infinite Terrain im Spiel |
-| **Mirror X / Mirror Z** | Dock MIRROR (F5/F6) | Nur Editor-Pinsel-Symmetrie, **kein** Welt-Spiegel |
+| **Mirror X / Mirror Z** | Dock MIRROR (F5/F6) | Pinsel spiegeln um die Kartenmitte im Editor. Spawns und Alloys spiegeln auf Z um 2 m versetzt, damit das Paar **im Spiel** gleich weit von den Kanten liegt (Speichern rechnet `z_welt = length - z - 1`). |
 
 Empfehlung: Map größer als die Arena wählen und Playable Area einschieben, damit ein gestalteter Randstreifen vor dem Infinite Terrain liegt. Neue Karten starten mit Playable = **halbe Kartengröße, zentriert** (wie The Forge); „Volle Karte“ und „Zentrieren“ stehen im Karte-Menü. Beim Resize der Map bleiben kleinere Playable-Rechtecke erhalten (werden nur an die neuen Grenzen geklemmt).
 
@@ -54,7 +72,11 @@ MeineKarte/
 
 `.sanmap` ist JSON (2 Spaces, CRLF), Schema Version 3. Spawns heißen `Army_N` und bekommen passende `armies`-Einträge (`Army_1/3/5…` → faction 1, `Army_2/4/6…` → faction 2 — wie The Forge).
 
-**Koordinaten:** Laut `Sanctuary/MapUtils.cs` (`TextureToWorldOrigin`) bleiben Heightmap/TGA im Texture-Space; nur Marker/Props/Playable-Z werden beim Speichern mit `z_world = length - z - 1` ins World-Space geschrieben (und beim Laden zurück). Raster werden **nicht** gespiegelt — das hatte die Karte im Spiel links/rechts vertauscht.
+**Koordinaten:** Laut `Sanctuary/MapUtils.cs` (`TextureToWorldOrigin`) bleiben Heightmap/TGA im Texture-Space; nur Marker/Props/Playable-Z werden beim Speichern mit `z_world = length - z - 1` ins World-Space geschrieben. Beim Laden wird World-Z wieder in Editor-Z zurückgerechnet. Ein Gleichstand der Höhenprobe (flache Karte) gilt als World-Space — sonst würde der nächste Speichervorgang die Spawns ein zweites Mal spiegeln und die Spieler starten gegenüber dem Marker. Raster werden **nicht** gespiegelt.
+
+**Oberfläche:** Die Editor-UI ist Englisch. Schrift und Fenster-Skalierung wachsen mit der Fensterhöhe, damit die Leiste auf großen Monitoren lesbar bleibt. Schicht-Namen im Mal-Menü sind die originalen Texturdateinamen; das Feld `name` an Stratum-Layern wird nicht geschrieben (offizielle Karten lassen es weg).
+
+**Alloys:** Rotation ist Identität (wie Spawns / MapUtils). Y wird 0,4 m über der Terrainhöhe gespeichert, damit die Markierung auf dem Boden liegt statt darin. Im Editor erscheinen Alloys als flache Scheibe. Bereits platzierte Spiegel-Paare bleiben an der alten Stelle, bis sie neu gesetzt werden.
 
 ## MVP-Funktionen
 

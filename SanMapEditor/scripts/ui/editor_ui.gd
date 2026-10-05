@@ -36,9 +36,12 @@ var _view_group: ButtonGroup
 var _anim_tween: Tween
 var _syncing: bool = false
 var _map_menu_open: bool = false
+var _ui_scale := 1.0
 
 
 func _ready() -> void:
+	_apply_readable_scale()
+	get_window().size_changed.connect(_apply_readable_scale)
 	_tool_group = ButtonGroup.new()
 	_tool_group.allow_unpress = false
 	_view_group = ButtonGroup.new()
@@ -146,16 +149,26 @@ func _ready() -> void:
 	_update_status()
 
 
+func _apply_readable_scale() -> void:
+	## 11px chrome is readable in a 900px window and too small when the window is tall.
+	var window_h := float(get_window().size.y)
+	var factor := clampf(window_h / 900.0, 1.0, 1.28)
+	if is_equal_approx(factor, _ui_scale):
+		return
+	_ui_scale = factor
+	get_window().content_scale_factor = factor
+
+
 func _on_map_menu_toggled(pressed: bool) -> void:
 	_map_menu_open = pressed
 	%MapMenuPanel.visible = pressed
-	%BtnMapMenu.text = "Karte ▴" if pressed else "Karte ▾"
+	%BtnMapMenu.text = "Map ▴" if pressed else "Map ▾"
 	if pressed:
 		_position_map_menu_panel()
 
 
 func _position_map_menu_panel() -> void:
-	## Anchor the dropdown under the Karte button (left of 3D).
+	## Anchor the dropdown under the Map button (left of 3D).
 	var btn: Control = %BtnMapMenu
 	var panel: Control = %MapMenuPanel
 	var btn_rect := btn.get_global_rect()
@@ -165,8 +178,8 @@ func _position_map_menu_panel() -> void:
 	var local_y := btn_rect.end.y - root_rect.position.y + 6.0
 	panel.offset_left = local_x
 	panel.offset_top = local_y
-	panel.offset_right = local_x + 366.0
-	panel.offset_bottom = local_y + 618.0
+	panel.offset_right = local_x + 440.0
+	panel.offset_bottom = local_y + 700.0
 
 
 func _input(event: InputEvent) -> void:
@@ -320,21 +333,21 @@ func _update_tool_context_panels() -> void:
 	%BrushHeader.text = _tool_settings_header(tool)
 	%RadiusRow.visible = uses_radius
 	%BrushRadius.visible = uses_radius
-	%RadiusLabel.text = "Breite (m)" if (is_geom or is_ramp) else "Radius (m)"
+	%RadiusLabel.text = "Width (m)" if (is_geom or is_ramp) else "Radius (m)"
 	%StrengthRow.visible = uses_strength
 	%BrushStrength.visible = uses_strength
 	%SetHeightRow.visible = uses_height
 	%SetHeightSlider.visible = uses_height
-	%SetHeightLabel.text = "Höhe (m)" if is_ramp else "Zielhöhe (m)"
+	%SetHeightLabel.text = "Height (m)" if is_ramp else "Target height (m)"
 	%SetHeightHint.visible = uses_height
 	if is_ramp:
-		%SetHeightHint.text = "Endhöhe der fertigen Rampe. Shift+Klick: Höhe vom Terrain. Breite = Pinselradius."
+		%SetHeightHint.text = "End height of the finished ramp. Shift+click samples terrain. Width = brush radius."
 	elif is_geom:
-		%SetHeightHint.text = "Zielhöhe für Formen. Form+Höhe: Setzen / Anheben / Absenken. Shift+Klick sampelt."
+		%SetHeightHint.text = "Target height for shapes. Shape+height: Set / Raise / Lower. Shift+click samples."
 	elif is_set_h or is_measure:
-		%SetHeightHint.text = "Zielhöhe für Ebnen. Shift+Klick oder Measure-Pin übernimmt Terrainhöhe."
+		%SetHeightHint.text = "Target height for flatten. Shift+click or the measure pin copies terrain height."
 	else:
-		%SetHeightHint.text = "Zielhöhe."
+		%SetHeightHint.text = "Target height."
 
 	%SepShapes.visible = show_tool_extra
 	%SectionShapes.visible = show_tool_extra
@@ -351,11 +364,11 @@ func _update_tool_context_panels() -> void:
 	%PathStatusLabel.visible = is_path
 	%ShapesHint.visible = show_tool_extra
 	if is_ramp:
-		%ShapesHint.text = "Hover zeigt die Rampe. Drehen-Buttons ändern die Richtung. LMB bestätigt die Platzierung."
+		%ShapesHint.text = "Hover shows the ramp. Rotate buttons change direction. LMB places it."
 	elif is_geom:
-		%ShapesHint.text = "Ziehen zum Zeichnen. Bogen: 3 Klicks. Esc/RMB bricht ab."
+		%ShapesHint.text = "Drag to draw. Arc: 3 clicks. Esc/RMB cancels."
 	elif is_path:
-		%ShapesHint.text = "Rot = zu steil. Zwei Klicks prüfen einen Pfad."
+		%ShapesHint.text = "Red = too steep. Two clicks check a path."
 	else:
 		%ShapesHint.text = ""
 
@@ -370,27 +383,27 @@ func _update_tool_context_panels() -> void:
 func _tool_settings_header(tool: EditorState.Tool) -> String:
 	match tool:
 		EditorState.Tool.RAISE:
-			return "ANHEBEN"
+			return "RAISE"
 		EditorState.Tool.LOWER:
-			return "ABSENKEN"
+			return "LOWER"
 		EditorState.Tool.SMOOTH:
-			return "GLÄTTEN"
+			return "SMOOTH"
 		EditorState.Tool.SET_HEIGHT:
-			return "HÖHE SETZEN"
+			return "SET HEIGHT"
 		EditorState.Tool.MEASURE_HEIGHT:
-			return "MESSEN"
+			return "MEASURE"
 		EditorState.Tool.PAINT_TEXTURE:
-			return "MALEN"
+			return "PAINT"
 		EditorState.Tool.SHAPE_LINE:
-			return "LINIE"
+			return "LINE"
 		EditorState.Tool.SHAPE_CIRCLE:
-			return "KREIS"
+			return "CIRCLE"
 		EditorState.Tool.SHAPE_ARC:
-			return "BOGEN"
+			return "ARC"
 		EditorState.Tool.SHAPE_PLATEAU:
 			return "PLATEAU"
 		EditorState.Tool.SHAPE_RAMP:
-			return "RAMPE"
+			return "RAMP"
 		EditorState.Tool.PATHING:
 			return "PATHING"
 		EditorState.Tool.MARKER_SPAWN:
@@ -400,7 +413,7 @@ func _tool_settings_header(tool: EditorState.Tool) -> String:
 		EditorState.Tool.PLACE_PROP:
 			return "PROP"
 		_:
-			return "WERKZEUG"
+			return "TOOL"
 
 
 func _on_view_changed() -> void:
@@ -493,7 +506,7 @@ func _sync_prop_settings() -> void:
 func _sync_prop_count() -> void:
 	var n := EditorState.prop_instance_count()
 	var groups := EditorState.map.props.size()
-	%PropCountLabel.text = "%d Props · %d Typen" % [n, groups]
+	%PropCountLabel.text = "%d props · %d types" % [n, groups]
 	# Maps may introduce new blueprints; refresh list without losing selection.
 	var btn: OptionButton = %PropBlueprint
 	var known := {}
@@ -626,24 +639,24 @@ func _sync_mirror_buttons() -> void:
 func _update_status() -> void:
 	var dirty := EditorState.is_dirty
 	dirty_badge.visible = dirty
-	var path := EditorState.current_path if EditorState.current_path != "" else "Nicht gespeichert"
+	var path := EditorState.current_path if EditorState.current_path != "" else "Unsaved"
 	var tool_names := {
 		EditorState.Tool.ORBIT: "Orbit",
-		EditorState.Tool.RAISE: "Anheben",
-		EditorState.Tool.LOWER: "Absenken",
-		EditorState.Tool.SMOOTH: "Glätten",
-		EditorState.Tool.SET_HEIGHT: "Höhe setzen",
-		EditorState.Tool.MEASURE_HEIGHT: "Höhe messen",
-		EditorState.Tool.PAINT_TEXTURE: "Textur malen",
-		EditorState.Tool.SHAPE_LINE: "Linie",
-		EditorState.Tool.SHAPE_CIRCLE: "Kreis",
-		EditorState.Tool.SHAPE_ARC: "Bogen",
+		EditorState.Tool.RAISE: "Raise",
+		EditorState.Tool.LOWER: "Lower",
+		EditorState.Tool.SMOOTH: "Smooth",
+		EditorState.Tool.SET_HEIGHT: "Set height",
+		EditorState.Tool.MEASURE_HEIGHT: "Measure height",
+		EditorState.Tool.PAINT_TEXTURE: "Paint texture",
+		EditorState.Tool.SHAPE_LINE: "Line",
+		EditorState.Tool.SHAPE_CIRCLE: "Circle",
+		EditorState.Tool.SHAPE_ARC: "Arc",
 		EditorState.Tool.SHAPE_PLATEAU: "Plateau",
-		EditorState.Tool.SHAPE_RAMP: "Rampe",
+		EditorState.Tool.SHAPE_RAMP: "Ramp",
 		EditorState.Tool.PATHING: "Pathing",
-		EditorState.Tool.MARKER_SPAWN: "Spawn setzen",
-		EditorState.Tool.MARKER_ALLOYS: "Alloys setzen",
-		EditorState.Tool.PLACE_PROP: "Prop setzen",
+		EditorState.Tool.MARKER_SPAWN: "Place spawn",
+		EditorState.Tool.MARKER_ALLOYS: "Place alloy",
+		EditorState.Tool.PLACE_PROP: "Place prop",
 	}
 	var tool_name: String = tool_names.get(EditorState.active_tool, "?")
 	var view_names := {
@@ -674,53 +687,53 @@ func _update_status() -> void:
 func _hint_for_tool(tool: EditorState.Tool) -> String:
 	match tool:
 		EditorState.Tool.ORBIT:
-			return "RMB Orbit · MMB Pan · Rad Zoom"
+			return "RMB orbit · MMB pan · wheel zoom"
 		EditorState.Tool.RAISE:
-			return "LMB halten: Terrain anheben"
+			return "Hold LMB: raise terrain"
 		EditorState.Tool.LOWER:
-			return "LMB halten: Terrain absenken"
+			return "Hold LMB: lower terrain"
 		EditorState.Tool.SMOOTH:
-			return "LMB halten: Kanten glätten"
+			return "Hold LMB: smooth edges"
 		EditorState.Tool.SET_HEIGHT:
-			return "LMB: auf %.1f m setzen · Shift+Klick: Höhe sampeln" % EditorState.set_height_world
+			return "LMB: set to %.1f m · Shift+click: sample height" % EditorState.set_height_world
 		EditorState.Tool.MEASURE_HEIGHT:
 			if EditorState.measure_live_valid:
-				return "Live %.1f m · Klick: pinnen + Zielhöhe im Pinsel setzen" % EditorState.measure_live_height
-			return "Cursor über Terrain: Höhe lesen · Klick: pinnen + Zielhöhe im Pinsel setzen"
+				return "Live %.1f m · Click: pin and set brush target height" % EditorState.measure_live_height
+			return "Hover terrain to read height · Click: pin and set brush target height"
 		EditorState.Tool.PAINT_TEXTURE:
-			return "LMB halten: Schicht %d malen · Mirror gilt auch hier" % (EditorState.paint_layer + 1)
+			return "Hold LMB: paint layer %d · Mirror applies here too" % (EditorState.paint_layer + 1)
 		EditorState.Tool.MARKER_SPAWN:
-			return "LMB: Spawn-Marker setzen"
+			return "LMB: place spawn marker"
 		EditorState.Tool.MARKER_ALLOYS:
-			return "LMB: Alloy-Marker setzen"
+			return "LMB: place alloy marker"
 		EditorState.Tool.PLACE_PROP:
-			return "LMB: %s setzen · Scale %.2f%s" % [
+			return "LMB: place %s · scale %.2f%s" % [
 				PropCatalog.display_name(EditorState.prop_blueprint),
 				EditorState.prop_scale,
 				" · Mirror" if (EditorState.mirror_x_enabled or EditorState.mirror_z_enabled) else "",
 			]
 		EditorState.Tool.SHAPE_LINE:
-			return "Ziehen: Linie · %s → %.1f m · Breite = Pinselradius" % [
+			return "Drag: line · %s → %.1f m · width = brush radius" % [
 				_shape_height_mode_label(),
 				EditorState.set_height_world,
 			]
 		EditorState.Tool.SHAPE_CIRCLE:
-			return "Zentrum → Radius: Kreis · %s → %.1f m" % [
+			return "Center → radius: circle · %s → %.1f m" % [
 				_shape_height_mode_label(),
 				EditorState.set_height_world,
 			]
 		EditorState.Tool.SHAPE_ARC:
-			return "3 Klicks: Bogen · %s → %.1f m · Breite = Pinselradius" % [
+			return "3 clicks: arc · %s → %.1f m · width = brush radius" % [
 				_shape_height_mode_label(),
 				EditorState.set_height_world,
 			]
 		EditorState.Tool.SHAPE_PLATEAU:
-			return "Ziehen: Plateau · %s → %.1f m" % [
+			return "Drag: plateau · %s → %.1f m" % [
 				_shape_height_mode_label(),
 				EditorState.set_height_world,
 			]
 		EditorState.Tool.SHAPE_RAMP:
-			return "Hover-Vorschau · Drehen-Buttons · LMB platziert · %.1f m · %.1f° · %.0f m" % [
+			return "Hover preview · rotate buttons · LMB places · %.1f m · %.1f° · %.0f m" % [
 				EditorState.set_height_world,
 				EditorState.ramp_angle_deg,
 				EditorState.ramp_length_m,
@@ -728,7 +741,7 @@ func _hint_for_tool(tool: EditorState.Tool) -> String:
 		EditorState.Tool.PATHING:
 			if not EditorState.pathing_status.is_empty():
 				return EditorState.pathing_status
-			return "Rot = zu steil (>%.0f°) · zwei Klicks: Pfad prüfen · Esc bricht ab" % EditorState.pathing_max_angle_deg
+			return "Red = too steep (>%.0f°) · two clicks: check path · Esc cancels" % EditorState.pathing_max_angle_deg
 		_:
 			return ""
 
@@ -814,9 +827,9 @@ func _sync_ramp_linked_spins() -> void:
 func _populate_shape_height_modes() -> void:
 	var btn: OptionButton = %ShapeHeightMode
 	btn.clear()
-	btn.add_item("Setzen (absolut)", TerrainShapes.HeightMode.SET)
-	btn.add_item("Anheben → Zielhöhe", TerrainShapes.HeightMode.RAISE)
-	btn.add_item("Absenken → Zielhöhe", TerrainShapes.HeightMode.LOWER)
+	btn.add_item("Set (absolute)", TerrainShapes.HeightMode.SET)
+	btn.add_item("Raise toward target", TerrainShapes.HeightMode.RAISE)
+	btn.add_item("Lower toward target", TerrainShapes.HeightMode.LOWER)
 
 
 func _sync_shape_height_mode() -> void:
@@ -841,11 +854,11 @@ func _on_shape_height_mode_selected(index: int) -> void:
 func _shape_height_mode_label() -> String:
 	match EditorState.shape_height_mode:
 		TerrainShapes.HeightMode.RAISE:
-			return "Anheben"
+			return "Raise"
 		TerrainShapes.HeightMode.LOWER:
-			return "Absenken"
+			return "Lower"
 		_:
-			return "Setzen"
+			return "Set"
 
 
 func _on_path_angle(v: float) -> void:
@@ -859,7 +872,7 @@ func _on_path_angle(v: float) -> void:
 func _sync_pathing_status() -> void:
 	var label: Label = %PathStatusLabel
 	if EditorState.pathing_status.is_empty():
-		label.text = "Path-Tool: rote Steigungen über Limit · zwei Klicks = Pfadprüfung"
+		label.text = "Path tool: red slopes are over the limit · two clicks check a path"
 	else:
 		label.text = EditorState.pathing_status
 	_update_status()
@@ -975,7 +988,7 @@ func _prepare_save_dialog() -> void:
 func _on_open_selected(path: String) -> void:
 	var err := EditorState.load_from_path(path)
 	if err != OK:
-		status_label.text = "Öffnen fehlgeschlagen"
+		status_label.text = "Open failed"
 
 
 func _on_save_selected(path: String) -> void:
@@ -986,10 +999,10 @@ func _do_save(path: String) -> void:
 	EditorState.map.name = name_edit.text
 	var err := EditorState.save_to_path(path)
 	if err != OK:
-		status_label.text = "Speichern fehlgeschlagen (%s)" % error_string(err)
+		status_label.text = "Save failed (%s)" % error_string(err)
 	else:
 		_sync_from_state()
-		status_label.text = "Gespeichert: %s" % EditorState.current_path.get_base_dir()
+		status_label.text = "Saved: %s" % EditorState.current_path.get_base_dir()
 		_update_status()
 
 

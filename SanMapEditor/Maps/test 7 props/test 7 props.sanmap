@@ -1,0 +1,1408 @@
+{
+  "fileVersion": 3,
+  "mapVersion": 1,
+  "name": "verify",
+  "credits": "",
+  "width": 256,
+  "length": 256,
+  "height": 128,
+  "heightmapResolution": 257,
+  "hasWater": false,
+  "waterLevel": 0.0,
+  "waterDepth": 8.0,
+  "waterWindSpeed": 0.25,
+  "waterWindDirection": 160.0,
+  "waterWindShoreWavesRemap": 0.5,
+  "waterShoreDepthOffset": 8.0,
+  "waterShoreDepthStrength": 0.7,
+  "waterShoreDistanceOffset": 0.0,
+  "waterShoreDistanceStrength": 2.0,
+  "waterShoreGeneratorBlueprint": "",
+  "shader": "RTS/TerrainLit",
+  "heightTransition": 0.5,
+  "fadeDistance": 128.0,
+  "fadeStartDistance": 1.0,
+  "stratumLayers": [
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass07_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass07_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass07_mask.tga"
+      },
+      "tileSize": {
+        "x": 10.0,
+        "y": 10.0
+      },
+      "tileSizeFar": {
+        "x": 40.0,
+        "y": 40.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass02_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass02_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass02b_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_moss01_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_moss01_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_moss01_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_sand05_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_sand05_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_sand05_mask.tga"
+      },
+      "tileSize": {
+        "x": 10.0,
+        "y": 10.0
+      },
+      "tileSizeFar": {
+        "x": 40.0,
+        "y": 40.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_rock_cliff02_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_rock_cliff02_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_rock_cliff02_masks.tga"
+      },
+      "tileSize": {
+        "x": 12.0,
+        "y": 12.0
+      },
+      "tileSizeFar": {
+        "x": 48.0,
+        "y": 48.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_heather03_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_heather03_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_heather03_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_mud02_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_mud02_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_mud02_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass03_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass03_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass03_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": ""
+      },
+      "normal": {
+        "path": ""
+      },
+      "mask": {
+        "path": ""
+      },
+      "tileSize": {
+        "x": 1.0,
+        "y": 1.0
+      },
+      "tileSizeFar": {
+        "x": 1.0,
+        "y": 1.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "backgroundFogIntensity": 0.425,
+  "backgroundFogRange": 1024.0,
+  "backgroundFogMinimum": 0.1,
+  "backgroundSkyColorIntensity": 0.52,
+  "backgroundColorIntensity": 1.0,
+  "backgroundColor": {
+    "r": 1.319508,
+    "g": 1.319508,
+    "b": 1.319508,
+    "a": 1.0
+  },
+  "backgroundColorFadeoutRange": 150000.0,
+  "backgroundColorFadeoutPower": 0.3,
+  "heightFogIntensity": 1.0,
+  "heightFogRange": {
+    "x": -10.0,
+    "y": 100.0
+  },
+  "heightFogStart": -10.0,
+  "heightFogEnd": 500.0,
+  "heightFogPower": 6.0,
+  "linearFogIntensity": 0.24,
+  "linearFogStart": 100.0,
+  "linearFogEnd": 5000.0,
+  "linearFogPower": 1.0,
+  "linearFogCameraIntensity": 0.0,
+  "linearFogCameraStart": 500.0,
+  "linearFogCameraEnd": 5000.0,
+  "sunRA": 96.2,
+  "sunDA": 30.0,
+  "sunIntensity": 60000.0,
+  "sunTint": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+  },
+  "sunTemperature": 9800.0,
+  "sunAngularDiameter": 0.5,
+  "sunVolumetricsMultiplier": 6.7,
+  "sunVolumetricsShadowDimer": 0.5,
+  "sunPosition": {
+    "x": 512.0,
+    "y": 10.0,
+    "z": 256.0
+  },
+  "sunCookie": {
+    "path": ""
+  },
+  "sunCookieSize": {
+    "x": 1024.0,
+    "y": 1024.0
+  },
+  "skylightIntensity": 0.0,
+  "skylightTint": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+  },
+  "skylightTemperature": 12000.0,
+  "exposure": 11.5,
+  "exposureCompensation": 0.0,
+  "skyboxRotation": 232.0,
+  "skyboxIntensityMode": "Exposure",
+  "skyboxExposure": 12.9,
+  "skyboxMultiplier": 1.0,
+  "skyboxLuxValue": 30000.0,
+  "fogAttenuationDistance": 251.0,
+  "fogBaseHeight": 5.41,
+  "fogMaximumHeight": 132.5,
+  "fogMaximumDistance": 1500.0,
+  "fogAnisotropy": 0.0,
+  "skybox": {
+    "path": "Environment/Skybox/kloofendal_48d_partly_cloudy_puresky_4k.exr"
+  },
+  "areas": {
+    "PlayableArea": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 256.0,
+      "height": 256.0
+    }
+  },
+  "armies": {
+    "Army_1": {
+      "faction": 0,
+      "alloys": 500.0,
+      "energy": 500.0,
+      "groups": {}
+    },
+    "Army_2": {
+      "faction": 0,
+      "alloys": 500.0,
+      "energy": 500.0,
+      "groups": {}
+    }
+  },
+  "chains": {},
+  "markers": {
+    "Alloys": {
+      "resource": true,
+      "transforms": {
+        "AlloyMarker": {
+          "position": {
+            "x": 191.617065429688,
+            "y": 7.0544251877675,
+            "z": 234.721557617188
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_2": {
+          "position": {
+            "x": 226.177337646484,
+            "y": 10.3767480895062,
+            "z": 207.458587646484
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_3": {
+          "position": {
+            "x": 147.188140869141,
+            "y": 15.2116239731116,
+            "z": 143.077209472656
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_4": {
+          "position": {
+            "x": 108.811859130859,
+            "y": 15.2116225303186,
+            "z": 143.077209472656
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_5": {
+          "position": {
+            "x": 182.902908325195,
+            "y": 14.6904934314653,
+            "z": 87.5359725952148
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_6": {
+          "position": {
+            "x": 73.0970916748047,
+            "y": 14.6904934314653,
+            "z": 87.5359725952148
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_7": {
+          "position": {
+            "x": 224.245178222656,
+            "y": 11.9635532561734,
+            "z": 55.9360885620117
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_8": {
+          "position": {
+            "x": 31.7548217773438,
+            "y": 11.9635532561734,
+            "z": 55.9360885620117
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_9": {
+          "position": {
+            "x": 189.489868164063,
+            "y": 12.1609391181808,
+            "z": 218.110290527344
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_10": {
+          "position": {
+            "x": 66.5101318359375,
+            "y": 12.1609391181808,
+            "z": 218.110290527344
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_11": {
+          "position": {
+            "x": 222.145263671875,
+            "y": 14.1095007933611,
+            "z": 173.637390136719
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_12": {
+          "position": {
+            "x": 33.854736328125,
+            "y": 14.1095007933611,
+            "z": 173.637390136719
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_13": {
+          "position": {
+            "x": 117.014663696289,
+            "y": 15.2590362271391,
+            "z": 59.6113052368164
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_14": {
+          "position": {
+            "x": 138.985336303711,
+            "y": 15.2590381228259,
+            "z": 59.6113052368164
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      }
+    },
+    "Spawn": {
+      "resource": false,
+      "transforms": {
+        "Army_1": {
+          "position": {
+            "x": 69.3666076660156,
+            "y": 13.4196705002476,
+            "z": 61.5793991088867
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "Army_2": {
+          "position": {
+            "x": 219.081298828125,
+            "y": 11.653680123182,
+            "z": 226.924835205078
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      }
+    }
+  },
+  "decals": [],
+  "windSpeed": 0.25,
+  "windDirection": 160.0,
+  "props": [
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0149/edbm0149.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 58.0514144897461,
+            "y": 9.17147518927341,
+            "z": 229.901153564453
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.43599551916122,
+            "z": 0.0,
+            "w": 0.89994883537292
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 91.7815856933594,
+            "y": 12.0669754561453,
+            "z": 222.070510864258
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.24849545955658,
+            "z": 0.0,
+            "w": -0.96863305568695
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 92.2377624511719,
+            "y": 14.3531542861122,
+            "z": 187.900085449219
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.75714123249054,
+            "z": 0.0,
+            "w": 0.65325117111206
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 198.324554443359,
+            "y": 12.8846302332093,
+            "z": 183.203674316406
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.25867864489555,
+            "z": 0.0,
+            "w": 0.96596342325211
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0148/edbm0148.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 150.668914794922,
+            "y": 10.7862369966867,
+            "z": 220.780334472656
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.31579548120499,
+            "z": 0.0,
+            "w": -0.94882726669312
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 161.939590454102,
+            "y": 14.3470687641919,
+            "z": 195.057708740234
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.04215555638075,
+            "z": 0.0,
+            "w": -0.99911105632782
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0146/edbm0146.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 141.172393798828,
+            "y": 15.6027652933919,
+            "z": 165.132415771484
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.19645924866199,
+            "z": 0.0,
+            "w": -0.98051196336746
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 171.369979858398,
+            "y": 14.1332188999618,
+            "z": 131.955337524414
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.57025164365768,
+            "z": 0.0,
+            "w": -0.82147008180618
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0145/edbm0145.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 121.866714477539,
+            "y": 15.9008335178659,
+            "z": 127.648361206055
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.73418897390366,
+            "z": 0.0,
+            "w": -0.67894518375397
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 84.5467529296875,
+            "y": 14.7329194766029,
+            "z": 145.271774291992
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.33447709679604,
+            "z": 0.0,
+            "w": -0.94240391254425
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0144/edbm0144.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 149.732147216797,
+            "y": 14.811657119556,
+            "z": 104.462509155273
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.64847701787949,
+            "z": 0.0,
+            "w": 0.76123422384262
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 185.540069580078,
+            "y": 14.7544528189779,
+            "z": 92.7567138671875
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.54228711128235,
+            "z": 0.0,
+            "w": 0.84019327163696
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0106/edbm0106.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 148.683319091797,
+            "y": 15.393068114001,
+            "z": 133.213256835938
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.6822697520256,
+            "z": 0.0,
+            "w": -0.73110049962997
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 121.479377746582,
+            "y": 15.591854242416,
+            "z": 147.910919189453
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.63381379842758,
+            "z": 0.0,
+            "w": -0.77348566055298
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0104/edbm0104.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 136.133514404297,
+            "y": 15.3010923497842,
+            "z": 197.892456054688
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.7401220202446,
+            "z": 0.0,
+            "w": 0.67247253656387
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 179.166061401367,
+            "y": 14.9090174201242,
+            "z": 156.191223144531
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.71026909351349,
+            "z": 0.0,
+            "w": -0.70393025875092
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0103/edbm0103.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 121.160011291504,
+            "y": 15.8278715976197,
+            "z": 175.024063110352
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.99999314546585,
+            "z": 0.0,
+            "w": -0.00369862280786
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 211.037567138672,
+            "y": 13.3398383769326,
+            "z": 145.863800048828
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.99315744638443,
+            "z": 0.0,
+            "w": -0.11678323894739
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0102/edbm0102.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 226.750045776367,
+            "y": 12.6908612091707,
+            "z": 191.351898193359
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.20473545789719,
+            "z": 0.0,
+            "w": 0.97881734371185
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 191.775177001953,
+            "y": 11.1591015766541,
+            "z": 221.332946777344
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.86272746324539,
+            "z": 0.0,
+            "w": -0.50566923618317
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 126.118499755859,
+            "y": 10.0339206833204,
+            "z": 234.990112304688
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.64160597324371,
+            "z": 0.0,
+            "w": 0.76703441143036
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 55.6242752075195,
+            "y": 12.6942685841587,
+            "z": 185.699462890625
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.94251209497452,
+            "z": 0.0,
+            "w": 0.33417209982872
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 190.658554077148,
+            "y": 14.5180098081344,
+            "z": 167.071929931641
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.65632462501526,
+            "z": 0.0,
+            "w": 0.75447863340378
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 174.062606811523,
+            "y": 14.127922834346,
+            "z": 182.680114746094
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.92421782016754,
+            "z": 0.0,
+            "w": -0.38186571002007
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "blueprintPath": "Environment/01_Highlands/Props/edbm0125/edbm0125.santp",
+      "transforms": [
+        {
+          "position": {
+            "x": 145.979644775391,
+            "y": 15.52582344346,
+            "z": 184.600463867188
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.60653179883957,
+            "z": 0.0,
+            "w": -0.79505920410156
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 105.98046875,
+            "y": 14.4541402426664,
+            "z": 198.570587158203
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.93420976400375,
+            "z": 0.0,
+            "w": 0.3567242026329
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        {
+          "position": {
+            "x": 127.349258422852,
+            "y": 9.75252430638466,
+            "z": 217.565032958984
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.84760075807571,
+            "z": 0.0,
+            "w": -0.53063452243805
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    }
+  ]
+}

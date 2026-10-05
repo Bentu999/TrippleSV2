@@ -121,14 +121,14 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.93, 0.78, 0.42, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "SANMAP"
 
 [node name="BrandSub" type="Label" parent="Root/TopBar/TopRow/BrandBlock"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.58, 0.62, 0.56, 1)
 theme_override_fonts/font = ExtResource("4_plex")
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 text = "SHATTERED SUN EDITOR"
 
 [node name="AccentLine" type="ColorRect" parent="Root/TopBar/TopRow"]
@@ -146,7 +146,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0.92, 0.93, 0.9, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "Untitled Map"
 vertical_alignment = 1
 
@@ -160,8 +160,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 [node name="DirtyText" type="Label" parent="Root/TopBar/TopRow/DirtyBadge"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.96, 0.9, 1)
-theme_override_font_sizes/font_size = 11
-text = "GEÄNDERT"
+theme_override_font_sizes/font_size = 14
+text = "MODIFIED"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -170,8 +170,8 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
 toggle_mode = true
-tooltip_text = "Karte, Playable Area, Fade und Wasser"
-text = "Karte ▾"
+tooltip_text = "Map, playable area, fade and water"
+text = "Map ▾"
 
 [node name="ViewButtons" type="HBoxContainer" parent="Root/TopBar/TopRow"]
 layout_mode = 2
@@ -207,32 +207,32 @@ theme_override_constants/separation = 6
 unique_name_in_owner = true
 custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
-text = "Neu"
+text = "New"
 
 [node name="BtnOpen" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(84, 0)
 layout_mode = 2
-text = "Öffnen"
+text = "Open"
 
 [node name="BtnSave" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
-text = "Speichern"
+text = "Save"
 
 [node name="BtnSaveAs" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
-text = "Speichern unter"
+text = "Save As"
 
 [node name="BtnUndo" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
 disabled = true
-tooltip_text = "Rückgängig (Ctrl+Z)"
+tooltip_text = "Undo (Ctrl+Z)"
 text = "Undo"
 
 [node name="BtnRedo" type="Button" parent="Root/TopBar/TopRow/FileButtons"]
@@ -240,7 +240,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
 disabled = true
-tooltip_text = "Wiederholen (Ctrl+Y)"
+tooltip_text = "Redo (Ctrl+Y)"
 text = "Redo"
 
 [node name="MapMenuPanel" type="PanelContainer" parent="Root"]
@@ -280,9 +280,9 @@ anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 14.0
-offset_top = -340.0
-offset_right = 86.0
-offset_bottom = 340.0
+offset_top = -380.0
+offset_right = 118.0
+offset_bottom = 380.0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rail")
 
@@ -293,7 +293,7 @@ theme_override_constants/separation = 4
 [node name="ToolsCaption" type="Label" parent="Root/ToolRail/ToolCol"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.62, 0.66, 0.58, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 13
 text = "TOOLS"
 horizontal_alignment = 1
 
@@ -331,23 +331,23 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
-tooltip_text = "Höhe setzen"
-text = "Höhe"
+tooltip_text = "Set height"
+text = "Height"
 
 [node name="BtnMeasure" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
-tooltip_text = "Höhe messen"
-text = "Messen"
+tooltip_text = "Measure height"
+text = "Measure"
 
 [node name="BtnPaint" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
-text = "Textur"
+text = "Paint"
 
 [node name="RailSepShapes" type="HSeparator" parent="Root/ToolRail/ToolCol"]
 layout_mode = 2
@@ -355,8 +355,8 @@ layout_mode = 2
 [node name="ShapesCaption" type="Label" parent="Root/ToolRail/ToolCol"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.62, 0.66, 0.58, 1)
-theme_override_font_sizes/font_size = 10
-text = "FORMEN"
+theme_override_font_sizes/font_size = 13
+text = "SHAPES"
 horizontal_alignment = 1
 
 [node name="BtnLine" type="Button" parent="Root/ToolRail/ToolCol"]
@@ -364,31 +364,31 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
-tooltip_text = "Gerade Linie auf Zielhöhe"
-text = "Linie"
+tooltip_text = "Straight line at target height"
+text = "Line"
 
 [node name="BtnCircle" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
-tooltip_text = "Kreis-Plateau auf Zielhöhe"
-text = "Kreis"
+tooltip_text = "Circle plateau at target height"
+text = "Circle"
 
 [node name="BtnArc" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
-tooltip_text = "Kreisbogen (3 Punkte)"
-text = "Bogen"
+tooltip_text = "Circular arc (3 points)"
+text = "Arc"
 
 [node name="BtnPlateau" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
-tooltip_text = "Rechteckiges Plateau"
+tooltip_text = "Rectangular plateau"
 text = "Plateau"
 
 [node name="BtnRamp" type="Button" parent="Root/ToolRail/ToolCol"]
@@ -396,15 +396,15 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
-tooltip_text = "Rampe mit einstellbarem Winkel"
-text = "Rampe"
+tooltip_text = "Ramp with adjustable angle"
+text = "Ramp"
 
 [node name="BtnPathing" type="Button" parent="Root/ToolRail/ToolCol"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 toggle_mode = true
-tooltip_text = "Pathing-Prüfung nach Steigung"
+tooltip_text = "Slope pathing check"
 text = "Path"
 
 [node name="RailSep" type="HSeparator" parent="Root/ToolRail/ToolCol"]
@@ -438,7 +438,7 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -348.0
+offset_left = -460.0
 offset_top = 70.0
 offset_right = -14.0
 offset_bottom = -46.0
@@ -470,13 +470,13 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 15
-text = "KARTE"
+theme_override_font_sizes/font_size = 18
+text = "MAP"
 
 [node name="NameEdit" type="LineEdit" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 unique_name_in_owner = true
 layout_mode = 2
-placeholder_text = "Kartenname"
+placeholder_text = "Map name"
 
 [node name="SizeGrid" type="GridContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 layout_mode = 2
@@ -540,20 +540,20 @@ value = 257.0
 [node name="BtnApplySize" type="Button" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Neue Karte mit Größe erstellen"
+text = "Create map at this size"
 
 [node name="ScaleGuidesCheck" type="CheckBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
-text = "Maßstab-Hilfen (Grid / 2 m)"
+text = "Scale guides (grid / 2 m)"
 
 [node name="ScaleHint" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionMap"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.52, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
-text = "1 Einheit = 1 m Spielwelt. Gelbes Grid, Kantenmaße, 2-m-Figur an der Playable-Ecke."
+text = "1 unit = 1 m in game. Yellow grid, edge measures, 2 m figure at the playable corner."
 
 [node name="SepPlayable" type="HSeparator" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox"]
 layout_mode = 2
@@ -566,7 +566,7 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "PLAYABLE AREA"
 
 [node name="PlayableGrid" type="GridContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
@@ -592,7 +592,7 @@ value = 64.0
 [node name="PlayableYLabel" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
-text = "Z / Y (m)"
+text = "Z (m)"
 
 [node name="PlayableYSpin" type="SpinBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableGrid"]
 unique_name_in_owner = true
@@ -636,20 +636,20 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Zentrieren"
+text = "Center"
 
 [node name="BtnPlayableFull" type="Button" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable/PlayableButtons"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Volle Karte"
+text = "Full map"
 
 [node name="PlayableHint" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.52, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
-text = "Standard: halbe Kartengröße, zentriert (wie The Forge). Rand außerhalb wird im Spiel von Infinite Terrain fortgesetzt."
+text = "Default: half the map, centered (like The Forge). Outside that, the game continues with infinite terrain."
 
 [node name="FadeGrid" type="GridContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
 layout_mode = 2
@@ -687,9 +687,9 @@ value = 128.0
 [node name="FadeHint" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionPlayable"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.52, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
-text = "fadeStartDistance / fadeDistance steuern den Übergang des Infinite Terrain im Spiel (Editor zeigt nur Overlay)."
+text = "fadeStartDistance / fadeDistance control the infinite-terrain fade in game (the editor only draws an overlay)."
 
 [node name="Sep1" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 visible = false
@@ -704,13 +704,13 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "TERRAIN"
 
 [node name="PresetLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Biome / Textur-Set"
+text = "Biome / texture set"
 
 [node name="TerrainPreset" type="OptionButton" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
 unique_name_in_owner = true
@@ -719,7 +719,7 @@ layout_mode = 2
 [node name="LayerLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Aktive Schicht (malen)"
+text = "Active layer (paint)"
 
 [node name="PaintLayer" type="OptionButton" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
 unique_name_in_owner = true
@@ -728,9 +728,9 @@ layout_mode = 2
 [node name="TerrainHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionTerrain"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
-text = "Schicht 1–8 mit festen Namen (Boden A … Stein) — in jedem Biome gleich. Die Dateipfade wechseln mit dem Biome."
+text = "Layers 1–8 use the original texture file names. Paths change with the biome."
 
 [node name="SepTerrain" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 unique_name_in_owner = true
@@ -746,8 +746,8 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 15
-text = "PINSEL"
+theme_override_font_sizes/font_size = 18
+text = "BRUSH"
 
 [node name="RadiusRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush"]
 unique_name_in_owner = true
@@ -782,7 +782,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Stärke"
+text = "Strength"
 
 [node name="BrushStrengthValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/StrengthRow"]
 unique_name_in_owner = true
@@ -807,7 +807,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Zielhöhe (m)"
+text = "Target height (m)"
 
 [node name="SetHeightValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionBrush/SetHeightRow"]
 unique_name_in_owner = true
@@ -826,9 +826,9 @@ value = 16.0
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
-text = "Zielhöhe für Ebnen / Formen / Rampe. Shift+Klick: Höhe vom Terrain übernehmen."
+text = "Target height for flatten / shapes / ramp. Shift+click copies terrain height."
 
 [node name="SepShapes" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 unique_name_in_owner = true
@@ -843,19 +843,19 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.78, 0.55, 1)
-theme_override_font_sizes/font_size = 13
-text = "WERKZEUG"
+theme_override_font_sizes/font_size = 16
+text = "TOOL"
 
 [node name="ShapeHeightLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Form + Höhe"
+text = "Shape + height"
 
 [node name="ShapeHeightMode" type="OptionButton" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
 unique_name_in_owner = true
 layout_mode = 2
-tooltip_text = "Wie Formen die Zielhöhe anwenden: setzen, nur anheben oder nur absenken"
+tooltip_text = "How shapes use target height: set, raise only, or lower only"
 
 [node name="RampAngleRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
 unique_name_in_owner = true
@@ -865,7 +865,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Winkel"
+text = "Angle"
 
 [node name="RampAngleValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampAngleRow"]
 unique_name_in_owner = true
@@ -889,7 +889,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Länge (m)"
+text = "Length (m)"
 
 [node name="RampLengthValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampLengthRow"]
 unique_name_in_owner = true
@@ -914,15 +914,15 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-tooltip_text = "Rampe 15° nach links drehen"
-text = "↶ Drehen"
+tooltip_text = "Rotate ramp 15° left"
+text = "↶ Rotate"
 
 [node name="BtnRampRotRight" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/RampRotateRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-tooltip_text = "Rampe 15° nach rechts drehen"
-text = "Drehen ↷"
+tooltip_text = "Rotate ramp 15° right"
+text = "Rotate ↷"
 
 [node name="PathAngleRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
 unique_name_in_owner = true
@@ -932,7 +932,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Pathing max. Steigung"
+text = "Pathing max slope"
 
 [node name="PathAngleValue" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes/PathAngleRow"]
 unique_name_in_owner = true
@@ -952,17 +952,17 @@ value = 30.0
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
-text = "Path-Tool: rote Steigungen über Limit · zwei Klicks = Pfadprüfung"
+text = "Path tool: red slopes are over the limit · two clicks check a path"
 
 [node name="ShapesHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionShapes"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
-text = "Einstellungen zum aktiven Werkzeug."
+text = "Settings for the active tool."
 
 [node name="SepMirror" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 unique_name_in_owner = true
@@ -977,7 +977,7 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "MIRROR"
 
 [node name="MirrorRow" type="HBoxContainer" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMirror"]
@@ -999,9 +999,9 @@ text = "Mirror Z"
 [node name="MirrorHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMirror"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.54, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
-text = "Pinsel-Symmetrie um die Kartenmitte. X = links/rechts, Z = vorne/hinten. Toggle: F5 / F6."
+text = "Brush symmetry around the map center. X = left/right, Z = front/back. Toggle: F5 / F6."
 
 [node name="Sep2" type="HSeparator" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox"]
 unique_name_in_owner = true
@@ -1016,13 +1016,13 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 15
-text = "WASSER"
+theme_override_font_sizes/font_size = 18
+text = "WATER"
 
 [node name="WaterCheck" type="CheckBox" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionWater"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Wasser aktiv"
+text = "Water enabled"
 
 [node name="WaterRow" type="HBoxContainer" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionWater"]
 layout_mode = 2
@@ -1031,7 +1031,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.74, 0.68, 1)
-text = "Pegel (m)"
+text = "Level (m)"
 
 [node name="WaterLevelValue" type="Label" parent="Root/MapMenuPanel/MapMenuMargin/MapMenuScroll/MapMenuVBox/SectionWater/WaterRow"]
 unique_name_in_owner = true
@@ -1058,18 +1058,18 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "MARKER"
 
 [node name="BtnClearSpawns" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMarkers"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Alle Spawns löschen"
+text = "Clear all spawns"
 
 [node name="BtnClearAlloys" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionMarkers"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Alle Alloys löschen"
+text = "Clear all alloys"
 
 [node name="SepProps" type="HSeparator" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 unique_name_in_owner = true
@@ -1084,7 +1084,7 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.66, 0.32, 1)
 theme_override_fonts/font = ExtResource("3_syne")
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "PROPS"
 
 [node name="PropBlueprintLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
@@ -1129,37 +1129,37 @@ value = 1.0
 unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
-text = "Zufällige Drehung (Y)"
+text = "Random yaw"
 
 [node name="PropCountLabel" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.62, 1)
-text = "0 Props platziert"
+text = "0 props placed"
 
 [node name="BtnClearPropType" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Aktuellen Typ löschen"
+text = "Clear this type"
 
 [node name="BtnClearProps" type="Button" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Alle Props löschen"
+text = "Clear all props"
 
 [node name="PropHint" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox/SectionProps"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.58, 0.62, 0.56, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 15
 autowrap_mode = 3
-text = "Platzhalter-Boxen im Editor. Im Spiel werden .santp-Blueprints geladen. Mirror gilt auch für Props."
+text = "Placeholder boxes in the editor. The game loads .santp blueprints. Mirror applies to props too."
 
 [node name="HintCard" type="Label" parent="Root/SideDock/DockMargin/Scroll/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.58, 0.62, 0.56, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 15
 autowrap_mode = 3
-text = "Speichern legt Ordner MapName/ an: MapName.sanmap, preview.png, Textures/… Spawns = Army_N. Undo/Redo: Ctrl+Z / Ctrl+Y."
+text = "Save creates a MapName/ folder: MapName.sanmap, preview.png, Textures/… Spawns = Army_N. Undo/Redo: Ctrl+Z / Ctrl+Y."
 
 [node name="ScaleBar" type="Control" parent="Root"]
 unique_name_in_owner = true
@@ -1196,33 +1196,33 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.78, 0.82, 0.76, 1)
-theme_override_font_sizes/font_size = 12
-text = "Bereit"
+theme_override_font_sizes/font_size = 15
+text = "Ready"
 vertical_alignment = 1
 
 [node name="ToolHint" type="Label" parent="Root/StatusBar/StatusRow"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.7, 0.4, 1)
-theme_override_font_sizes/font_size = 12
-text = "LMB halten: Terrain anheben"
+theme_override_font_sizes/font_size = 15
+text = "Hold LMB: raise terrain"
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="OpenDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
-title = "SanMap öffnen"
+title = "Open SanMap"
 size = Vector2i(880, 540)
-ok_button_text = "Öffnen"
+ok_button_text = "Open"
 file_mode = 0
 access = 2
 filters = PackedStringArray("*.sanmap ; Sanctuary Map")
 
 [node name="SaveDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
-title = "Kartenpaket speichern (legt Ordner an)"
+title = "Save map package (creates a folder)"
 size = Vector2i(880, 540)
-ok_button_text = "Speichern"
+ok_button_text = "Save"
 file_mode = 4
 access = 2
 filters = PackedStringArray("*.sanmap ; Sanctuary Map Package")

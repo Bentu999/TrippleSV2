@@ -1,0 +1,883 @@
+{
+  "fileVersion": 3,
+  "mapVersion": 1,
+  "name": "coole map",
+  "credits": "",
+  "width": 256,
+  "length": 256,
+  "height": 128,
+  "heightmapResolution": 257,
+  "hasWater": true,
+  "waterLevel": 16.0,
+  "waterDepth": 2.0,
+  "waterWindSpeed": 0.06,
+  "waterWindDirection": 100.0,
+  "waterWindShoreWavesRemap": 0.5,
+  "waterShoreDepthOffset": 8.0,
+  "waterShoreDepthStrength": 0.7,
+  "waterShoreDistanceOffset": 0.0,
+  "waterShoreDistanceStrength": 2.0,
+  "waterShoreGeneratorBlueprint": "",
+  "shader": "RTS/TerrainLit",
+  "heightTransition": 0.5,
+  "fadeDistance": 128.0,
+  "fadeStartDistance": 1.0,
+  "stratumLayers": [
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass07_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass07_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass07_mask.tga"
+      },
+      "tileSize": {
+        "x": 10.0,
+        "y": 10.0
+      },
+      "tileSizeFar": {
+        "x": 40.0,
+        "y": 40.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass02_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass02_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass02b_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_moss01_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_moss01_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_moss01_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_sand05_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_sand05_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_sand05_mask.tga"
+      },
+      "tileSize": {
+        "x": 10.0,
+        "y": 10.0
+      },
+      "tileSizeFar": {
+        "x": 40.0,
+        "y": 40.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_rock_cliff02_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_rock_cliff02_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_rock_cliff02_masks.tga"
+      },
+      "tileSize": {
+        "x": 12.0,
+        "y": 12.0
+      },
+      "tileSizeFar": {
+        "x": 48.0,
+        "y": 48.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_heather03_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_heather03_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_heather03_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_mud02_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_mud02_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_mud02_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass03_albedo.tga"
+      },
+      "normal": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass03_normal.tga"
+      },
+      "mask": {
+        "path": "Environment/01_Highlands/Stratum/highlands_100m_grass03_mask.tga"
+      },
+      "tileSize": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "tileSizeFar": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "albedo": {
+        "path": ""
+      },
+      "normal": {
+        "path": ""
+      },
+      "mask": {
+        "path": ""
+      },
+      "tileSize": {
+        "x": 1.0,
+        "y": 1.0
+      },
+      "tileSizeFar": {
+        "x": 1.0,
+        "y": 1.0
+      },
+      "tileSizeTriplanar": 12.0,
+      "tileSizeFarTriplanar": 36.0,
+      "normalScale": 1.0,
+      "normalScaleFar": 1.0,
+      "normalFarNearBlend": 0.5,
+      "heightFarNearBlend": 0.5,
+      "diffuseRemap": {
+        "r": 0.5,
+        "g": 0.5,
+        "b": 0.5,
+        "a": 1.0
+      },
+      "farColorRemap": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+      },
+      "maskRemapMin": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "maskRemapMax": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "backgroundFogIntensity": 0.425,
+  "backgroundFogRange": 1024.0,
+  "backgroundFogMinimum": 0.1,
+  "backgroundSkyColorIntensity": 0.52,
+  "backgroundColorIntensity": 1.0,
+  "backgroundColor": {
+    "r": 1.319508,
+    "g": 1.319508,
+    "b": 1.319508,
+    "a": 1.0
+  },
+  "backgroundColorFadeoutRange": 150000.0,
+  "backgroundColorFadeoutPower": 0.3,
+  "heightFogIntensity": 1.0,
+  "heightFogRange": {
+    "x": -10.0,
+    "y": 100.0
+  },
+  "heightFogStart": -10.0,
+  "heightFogEnd": 500.0,
+  "heightFogPower": 6.0,
+  "linearFogIntensity": 0.24,
+  "linearFogStart": 100.0,
+  "linearFogEnd": 5000.0,
+  "linearFogPower": 1.0,
+  "linearFogCameraIntensity": 0.0,
+  "linearFogCameraStart": 500.0,
+  "linearFogCameraEnd": 5000.0,
+  "sunRA": 96.2,
+  "sunDA": 30.0,
+  "sunIntensity": 60000.0,
+  "sunTint": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+  },
+  "sunTemperature": 9800.0,
+  "sunAngularDiameter": 0.5,
+  "sunVolumetricsMultiplier": 6.7,
+  "sunVolumetricsShadowDimer": 0.5,
+  "sunPosition": {
+    "x": 512.0,
+    "y": 10.0,
+    "z": 256.0
+  },
+  "sunCookie": {
+    "path": ""
+  },
+  "sunCookieSize": {
+    "x": 1024.0,
+    "y": 1024.0
+  },
+  "skylightIntensity": 0.0,
+  "skylightTint": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+  },
+  "skylightTemperature": 12000.0,
+  "exposure": 11.5,
+  "exposureCompensation": 0.0,
+  "skyboxRotation": 232.0,
+  "skyboxIntensityMode": "Exposure",
+  "skyboxExposure": 12.9,
+  "skyboxMultiplier": 1.0,
+  "skyboxLuxValue": 30000.0,
+  "fogAttenuationDistance": 251.0,
+  "fogBaseHeight": 5.41,
+  "fogMaximumHeight": 132.5,
+  "fogMaximumDistance": 1500.0,
+  "fogAnisotropy": 0.0,
+  "skybox": {
+    "path": "Environment/Skybox/kloofendal_48d_partly_cloudy_puresky_4k.exr"
+  },
+  "areas": {
+    "PlayableArea": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 256.0,
+      "height": 256.0
+    }
+  },
+  "armies": {
+    "Army_1": {
+      "faction": 0,
+      "alloys": 500.0,
+      "energy": 500.0,
+      "groups": {}
+    },
+    "Army_2": {
+      "faction": 0,
+      "alloys": 500.0,
+      "energy": 500.0,
+      "groups": {}
+    },
+    "Army_3": {
+      "faction": 0,
+      "alloys": 500.0,
+      "energy": 500.0,
+      "groups": {}
+    },
+    "Army_4": {
+      "faction": 0,
+      "alloys": 500.0,
+      "energy": 500.0,
+      "groups": {}
+    }
+  },
+  "chains": {},
+  "markers": {
+    "Alloys": {
+      "resource": true,
+      "transforms": {
+        "AlloyMarker": {
+          "position": {
+            "x": 191.000671386719,
+            "y": 28.1599998474121,
+            "z": 213.189086914063
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_2": {
+          "position": {
+            "x": 209.263122558594,
+            "y": 28.1599998474121,
+            "z": 194.169250488281
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_3": {
+          "position": {
+            "x": 204.011505126953,
+            "y": 28.1599998474121,
+            "z": 63.9092254638672
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_4": {
+          "position": {
+            "x": 182.714294433594,
+            "y": 28.1599998474121,
+            "z": 49.6403846740723
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_5": {
+          "position": {
+            "x": 69.5271148681641,
+            "y": 28.1599998474121,
+            "z": 48.9365005493164
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_6": {
+          "position": {
+            "x": 49.5873756408691,
+            "y": 28.1599998474121,
+            "z": 64.3699722290039
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_7": {
+          "position": {
+            "x": 48.4024658203125,
+            "y": 28.1599998474121,
+            "z": 185.585693359375
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_8": {
+          "position": {
+            "x": 70.4781112670898,
+            "y": 28.1599998474121,
+            "z": 204.9560546875
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_9": {
+          "position": {
+            "x": 63.6189308166504,
+            "y": 28.1599998474121,
+            "z": 189.416931152344
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_10": {
+          "position": {
+            "x": 196.651062011719,
+            "y": 28.762179540893,
+            "z": 198.902160644531
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_11": {
+          "position": {
+            "x": 191.500457763672,
+            "y": 28.1599998474121,
+            "z": 60.2001342773438
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "AlloyMarker_12": {
+          "position": {
+            "x": 64.3309631347656,
+            "y": 28.1599998474121,
+            "z": 61.6029853820801
+          },
+          "rotation": {
+            "x": 0.7071068,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.7071068
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      }
+    },
+    "Spawn": {
+      "resource": false,
+      "transforms": {
+        "Army_1": {
+          "position": {
+            "x": 204.880279541016,
+            "y": 28.1599998474121,
+            "z": 208.095123291016
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "Army_2": {
+          "position": {
+            "x": 51.5500564575195,
+            "y": 28.1599998474121,
+            "z": 199.220397949219
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "Army_3": {
+          "position": {
+            "x": 54.1679382324219,
+            "y": 28.1599998474121,
+            "z": 51.1449584960938
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "Army_4": {
+          "position": {
+            "x": 199.205352783203,
+            "y": 28.1599998474121,
+            "z": 51.2285537719727
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      }
+    }
+  },
+  "decals": [],
+  "windSpeed": 0.25,
+  "windDirection": 160.0,
+  "props": []
+}

@@ -4,16 +4,23 @@ extends RefCounted
 
 
 static func enviroment_root() -> String:
-	# SanMapEditor/ -> parent workspace -> Enviroment/
+	## Search order for Sanctuary terrain textures:
+	## 1) next to the exported .exe (portable dist)
+	## 2) workspace sibling of the Godot project (dev)
+	## 3) fallback path name
+	var candidates: PackedStringArray = []
+	var exe_dir := OS.get_executable_path().get_base_dir()
+	if not exe_dir.is_empty():
+		candidates.append(exe_dir.path_join("Enviroment"))
+		candidates.append(exe_dir.path_join("Environment"))
 	var project_root := ProjectSettings.globalize_path("res://").rstrip("/\\")
 	var workspace := project_root.get_base_dir()
-	var candidate := workspace.path_join("Enviroment")
-	if DirAccess.dir_exists_absolute(candidate):
-		return candidate
-	candidate = workspace.path_join("Environment")
-	if DirAccess.dir_exists_absolute(candidate):
-		return candidate
-	return workspace.path_join("Enviroment")
+	candidates.append(workspace.path_join("Enviroment"))
+	candidates.append(workspace.path_join("Environment"))
+	for candidate in candidates:
+		if DirAccess.dir_exists_absolute(candidate):
+			return candidate
+	return exe_dir.path_join("Enviroment") if not exe_dir.is_empty() else workspace.path_join("Enviroment")
 
 
 static func resolve_game_path(game_path: String) -> String:

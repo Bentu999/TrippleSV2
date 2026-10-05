@@ -2,20 +2,6 @@ class_name TerrainPresets
 extends RefCounted
 ## Named terrain material presets (stratum sets) used by official maps.
 
-## Stable paint-slot labels - identical for every biome (paths still differ).
-## Untyped const Array of string literals is a valid constant expression in GDScript 4.7.
-const LAYER_ROLE_NAMES = [
-	"Boden A",
-	"Boden B",
-	"Detail",
-	"Sand",
-	"Fels",
-	"Vegetation",
-	"Erde",
-	"Stein",
-]
-
-
 static func preset_ids() -> PackedStringArray:
 	return PackedStringArray(["highlands", "forest", "tropical", "desert", "frozen", "evergreen"])
 
@@ -42,37 +28,24 @@ static func apply(map: SanMapData, preset_id: String) -> void:
 	var layers: Array = _layers_for(preset_id)
 	if layers.is_empty():
 		return
-	_assign_layer_names(layers)
 	map.stratum_layers = layers
 	var sky := _sky_for(preset_id)
 	if not sky.is_empty():
 		map.skybox = {"path": sky}
 
 
-static func layer_role_name(index: int) -> String:
-	if index < 0 or index >= LAYER_ROLE_NAMES.size():
-		return "Schicht %d" % (index + 1)
-	return LAYER_ROLE_NAMES[index]
-
-
 static func layer_display_name(map: SanMapData, index: int) -> String:
-	## `index` is 0..7 internally; labels are biome-independent role names.
+	## Labels are the original albedo file names (1-based slot, same names the game uses).
 	var label_n := index + 1
-	var role := layer_role_name(index)
 	if index < 0 or index >= map.stratum_layers.size():
-		return "%d · %s" % [label_n, role]
+		return "Layer %d" % label_n
 	var layer: Dictionary = map.stratum_layers[index]
 	var path := str((layer.get("albedo", {}) as Dictionary).get("path", ""))
 	if path.is_empty():
-		return "%d · %s (leer)" % [label_n, role]
-	return "%d · %s" % [label_n, role]
-
-
-static func _assign_layer_names(layers: Array) -> void:
-	for i in mini(layers.size(), LAYER_ROLE_NAMES.size()):
-		if typeof(layers[i]) != TYPE_DICTIONARY:
-			continue
-		(layers[i] as Dictionary)["name"] = layer_role_name(i)
+		return "Layer %d (empty)" % label_n
+	var file := path.get_file()
+	file = file.replace("_albedo.tga", "").replace("_albedo.dds", "").replace("_albedo.png", "").replace("_albedo", "")
+	return "%d · %s" % [label_n, file]
 
 
 static func _sky_for(preset_id: String) -> String:

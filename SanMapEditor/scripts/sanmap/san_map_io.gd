@@ -351,16 +351,23 @@ static func convert_map_horizontal_z(map: SanMapData, to_world: bool) -> void:
 		map.decals[i] = group
 
 
-## After loading heightmap bytes: if .sanmap positions are Sanctuary-world, convert to editor/texture Z.
+## After loading heightmap bytes: .sanmap positions are Sanctuary world Z.
+## Convert them to editor/texture Z so the marker sits on the same ground the user clicked.
+##
+## Flat maps make both height fits equal. Treating that tie as "already editor space"
+## skipped the flip, and the next save flipped again — players spawned on the
+## opposite side of the map. Only legacy files whose texture-space Z clearly
+## matches the heightmap stay unflipped.
 static func apply_coordinate_space_for_editor(heights: PackedFloat32Array, map: SanMapData) -> void:
 	var err_tex := marker_height_fit_as_texture(heights, map)
 	var err_world := marker_height_fit_as_world(heights, map)
 	if err_world == INF and err_tex == INF:
 		return
-	# Official / correctly exported packs store world Z (MapUtils).
-	if err_world + 0.5 < err_tex:
-		convert_map_horizontal_z(map, false)
-		print("SanMapIO: converted Sanctuary world Z → editor texture Z (MapUtils).")
+	if err_tex + 0.75 < err_world:
+		print("SanMapIO: keeping texture-space Z (legacy file, height fit %.2f vs world %.2f)." % [err_tex, err_world])
+		return
+	convert_map_horizontal_z(map, false)
+	print("SanMapIO: converted Sanctuary world Z → editor texture Z (MapUtils).")
 
 
 static func load_heightmap_raw(path: String, resolution: int) -> PackedFloat32Array:

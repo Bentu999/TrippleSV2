@@ -69,7 +69,7 @@ var brush_radius: float = 12.0
 var brush_strength: float = 0.35
 ## Absolute world-space target height for SET_HEIGHT brush / shape fill / ramp end.
 var set_height_world: float = 16.0
-## How shapes combine with Zielhöhe: SET / RAISE / LOWER (see TerrainShapes.HeightMode).
+## How shapes combine with the target height: SET / RAISE / LOWER (see TerrainShapes.HeightMode).
 var shape_height_mode: int = TerrainShapes.HeightMode.SET
 ## Target slope for SHAPE_RAMP (degrees).
 var ramp_angle_deg: float = 15.0
@@ -653,7 +653,7 @@ func pathing_click(world_pos: Vector3) -> void:
 		pathing_has_a = true
 		pathing_path.clear()
 		pathing_path_ok = false
-		pathing_status = "Start gesetzt — zweiten Punkt für Ziel klicken"
+		pathing_status = "Start set — click a second point for the goal"
 		pathing_changed.emit()
 		return
 	run_pathing_check(pathing_pick_a, world_pos)
@@ -668,9 +668,9 @@ func run_pathing_check(start: Vector3, goal: Vector3) -> void:
 		var len_m := 0.0
 		for i in range(pathing_path.size() - 1):
 			len_m += pathing_path[i].distance_to(pathing_path[i + 1])
-		pathing_status = "Pfad OK · %.0f m · max. %.0f°" % [len_m, pathing_max_angle_deg]
+		pathing_status = "Path OK · %.0f m · max %.0f°" % [len_m, pathing_max_angle_deg]
 	else:
-		pathing_status = "Kein begehbarer Pfad bei max. %.0f°" % pathing_max_angle_deg
+		pathing_status = "No walkable path at max %.0f°" % pathing_max_angle_deg
 	pathing_changed.emit()
 
 
@@ -896,8 +896,23 @@ func expand_height_indices(index: Vector2i) -> Array[Vector2i]:
 	return out
 
 
-## World-space brush centers (primary first) for cursor ghosts / marker placement.
+## World-space brush centers (primary first) for cursor ghosts.
+## Symmetric in the editor around width/2 and length/2. Height brushes use the
+## same axis via vertex indices (`res - 1 - index`).
 func expand_brush_world_points(world_pos: Vector3) -> Array[Vector3]:
+	return _expand_world_points(world_pos, 0.0)
+
+
+## Spawn/alloy partners. X is not converted on save, so `width - x` stays symmetric.
+## Z is written as `length - z - 1`. A partner at `length - z` is even in the editor,
+## but after that conversion the two world Z values sum to `length - 2`: each edge
+## margin is off by 1 m (2 m between the ideal partner and the placed one).
+## `length - z - 2` is the editor Z whose saved value is `length - world_z`.
+func expand_marker_world_points(world_pos: Vector3) -> Array[Vector3]:
+	return _expand_world_points(world_pos, 2.0)
+
+
+func _expand_world_points(world_pos: Vector3, z_mirror_bias: float) -> Array[Vector3]:
 	var map_w := float(map.width)
 	var map_l := float(map.length)
 	var seed_pts: Array[Vector3] = [world_pos]
@@ -906,11 +921,13 @@ func expand_brush_world_points(world_pos: Vector3) -> Array[Vector3]:
 	if mirror_z_enabled:
 		var mirrored_z: Array[Vector3] = []
 		for p in seed_pts:
-			mirrored_z.append(Vector3(p.x, p.y, map_l - p.z))
+			mirrored_z.append(Vector3(p.x, p.y, map_l - p.z - z_mirror_bias))
 		seed_pts.append_array(mirrored_z)
 	var out: Array[Vector3] = []
 	var seen := {}
 	for p in seed_pts:
+		p.x = clampf(p.x, 0.0, map_w)
+		p.z = clampf(p.z, 0.0, map_l)
 		var key := "%.3f,%.3f" % [p.x, p.z]
 		if seen.has(key):
 			continue
@@ -1092,7 +1109,7 @@ func add_marker(marker_type: String, world_pos: Vector3) -> void:
 	var owned := begin_stroke("Marker")
 	map._ensure_core_markers()
 	_stroke_touched_markers = true
-	var points := expand_brush_world_points(world_pos)
+	var points := expand_marker_world_points(world_pos)
 	for p in points:
 		_add_marker_at(marker_type, p)
 	if marker_type == SanMapData.MARKER_SPAWN:
@@ -1108,10 +1125,13 @@ func _add_marker_at(marker_type: String, world_pos: Vector3) -> void:
 	var transforms: Dictionary = bucket.get("transforms", {})
 	var id := _next_marker_id(marker_type, transforms)
 	var y := sample_world_height(world_pos)
+	# Identity like MapUtils / spawns. The game prefab already orients the alloy
+	# decal flat; a +90° X quat would tip that mesh through the terrain.
 	var rotation := {"x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0}
-	# Official alloy markers use a 90° X rotation quaternion.
+	# Slight lift so the authored Y sits on the surface (forge alloys average
+	# near terrain; a buried pivot reads as "in the ground" in editor & export).
 	if marker_type == SanMapData.MARKER_ALLOYS:
-		rotation = {"x": 0.7071068, "y": 0.0, "z": 0.0, "w": 0.7071068}
+		y += 0.4
 	transforms[id] = {
 		"position": {"x": world_pos.x, "y": y, "z": world_pos.z},
 		"rotation": rotation,

@@ -128,7 +128,8 @@ func _process(delta: float) -> void:
 	var measuring := EditorState.active_tool == EditorState.Tool.MEASURE_HEIGHT
 	var shaping := EditorState.is_shape_tool()
 	var pathing := EditorState.active_tool == EditorState.Tool.PATHING
-	var show_brush := _is_sculpt_tool(EditorState.active_tool) or measuring or shaping or pathing
+	var placing_marker := EditorState.active_tool == EditorState.Tool.MARKER_SPAWN or EditorState.active_tool == EditorState.Tool.MARKER_ALLOYS
+	var show_brush := _is_sculpt_tool(EditorState.active_tool) or measuring or shaping or pathing or placing_marker
 	brush_ring.visible = show_brush
 	if measuring:
 		EditorState.set_live_measure(hit.position, true)
@@ -161,6 +162,9 @@ func _process(delta: float) -> void:
 	elif _is_sculpt_tool(EditorState.active_tool):
 		_restore_brush_style()
 		_update_brush_ghosts(hit.position, EditorState.brush_radius)
+	elif placing_marker:
+		_restore_brush_style()
+		_update_brush_ghosts_at(EditorState.expand_marker_world_points(hit.position), 2.5)
 	else:
 		_hide_mirror_rings()
 
@@ -510,7 +514,14 @@ func _sync_measure_pin() -> void:
 
 
 func _update_brush_ghosts(world_pos: Vector3, radius: float) -> void:
-	var points := EditorState.expand_brush_world_points(world_pos)
+	_update_brush_ghosts_at(EditorState.expand_brush_world_points(world_pos), radius)
+
+
+func _update_brush_ghosts_at(points: Array[Vector3], radius: float) -> void:
+	if points.is_empty():
+		brush_ring.visible = false
+		_hide_mirror_rings()
+		return
 	var r := maxf(radius, 1.0)
 	var lift := maxf(r * 0.05, 0.6)
 	_place_brush_visual(brush_ring, points[0], r, lift)
@@ -755,7 +766,7 @@ func _restick_markers() -> void:
 		if child is Node3D:
 			var n := child as Node3D
 			var p := n.global_position
-			p.y = EditorState.sample_world_height(p) + n.get_meta("hover", 8.0)
+			p.y = EditorState.sample_world_height(p) + float(n.get_meta("surface_lift", 0.0))
 			n.global_position = p
 
 
@@ -1108,27 +1119,42 @@ func _spawn_marker_group(marker_type: String, color: Color) -> void:
 	var stem_h := clampf(map_scale * 0.06, 10.0, 28.0)
 	var head_r := clampf(map_scale * 0.018, 3.5, 8.0)
 
+	var is_alloy := marker_type == SanMapData.MARKER_ALLOYS
+	# Match the authored alloy Y lift in editor_state (_add_marker_at).
+	var surface_lift := 0.4 if is_alloy else 0.0
+
 	for id in transforms.keys():
 		var t: Dictionary = transforms[id]
 		var pos: Dictionary = t.get("position", {})
 		var root := Node3D.new()
 		root.name = str(id)
-		root.set_meta("hover", stem_h * 0.55)
+		root.set_meta("surface_lift", surface_lift)
 
 		var stem := MeshInstance3D.new()
 		var cyl := CylinderMesh.new()
-		cyl.top_radius = head_r * 0.18
-		cyl.bottom_radius = head_r * 0.22
-		cyl.height = stem_h
-		stem.mesh = cyl
-		stem.position = Vector3(0.0, stem_h * 0.5, 0.0)
-
 		var head := MeshInstance3D.new()
 		var sphere := SphereMesh.new()
-		sphere.radius = head_r
-		sphere.height = head_r * 2.0
+		if is_alloy:
+			# Flat ground marker. Bottom of the disc is at the root, which is
+			# already raised by surface_lift.
+			var disc_h := 0.45
+			cyl.top_radius = head_r * 0.9
+			cyl.bottom_radius = head_r * 0.9
+			cyl.height = disc_h
+			stem.position = Vector3(0.0, disc_h * 0.5, 0.0)
+			sphere.radius = head_r * 0.55
+			sphere.height = head_r * 1.1
+			head.position = Vector3(0.0, disc_h + sphere.radius * 0.35, 0.0)
+		else:
+			cyl.top_radius = head_r * 0.18
+			cyl.bottom_radius = head_r * 0.22
+			cyl.height = stem_h
+			stem.position = Vector3(0.0, stem_h * 0.5, 0.0)
+			sphere.radius = head_r
+			sphere.height = head_r * 2.0
+			head.position = Vector3(0.0, stem_h + head_r * 0.2, 0.0)
+		stem.mesh = cyl
 		head.mesh = sphere
-		head.position = Vector3(0.0, stem_h + head_r * 0.2, 0.0)
 
 		var mat := StandardMaterial3D.new()
 		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
@@ -1143,6 +1169,6 @@ func _spawn_marker_group(marker_type: String, color: Color) -> void:
 		root.add_child(head)
 
 		var p := Vector3(float(pos.get("x", 0.0)), 0.0, float(pos.get("z", 0.0)))
-		p.y = EditorState.sample_world_height(p)
+		p.y = EditorState.sample_world_height(p) + surface_lift
 		root.position = p
 		markers_root.add_child(root)
